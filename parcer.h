@@ -6,6 +6,8 @@ int first_read(FILE *fptr);
 
 int second_read(FILE *fptr);
 
-void macro_handler();
+int macro_handler(char** list);
 
-int get_input(char* line);
+int is_end_of_macro(char** list);
+
+void get_input(char* line, char** list);

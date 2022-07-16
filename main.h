@@ -11,3 +11,5 @@ enum addressing_num{IMMEDIATE, DIRECT, INDIRECT_ADDRESSING, DIRECT_REGISTER}; /*
 char symbols[32]={'!','@','#','$','%','^','&','*','<','>',
 'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v'};
 
+
+free_list(char** list, int list_len);

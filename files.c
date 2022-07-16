@@ -14,11 +14,11 @@ void open_files(int argc, char *argv[])
 	printf("YOU ARE IN OPEN_FILES");
 	for (i = 1; i < argc; i++)
 	{
-		file_name = (char *)malloc(strlen(buff)+ 2 + strlen(argv[i]) + strlen(".txt"));
+		file_name = (char *)malloc(strlen(buff)+ 2 + strlen(argv[i]) + strlen(".txt") + 1);
 		if (!file_name)
 			printf("memory allocation failed");
 
-		strcpy(file_name, buff);
+		strncpy(file_name, buff, strlen(buff));
 		strcat(file_name, "\\");
 		strcat(file_name, argv[i]);
 		strcat(file_name, ".txt");
@@ -37,6 +37,7 @@ void open_files(int argc, char *argv[])
 
 
 		fclose(fptr); /* Closes the file after reading and frees the file_name string for the next file name */
+		file_name = NULL;
 		free(file_name);
 	}
 
