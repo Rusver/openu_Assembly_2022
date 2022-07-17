@@ -43,3 +43,6 @@ ConsoleApplication1/stdafx.h
 ConsoleApplication1/targetver.h
 ConsoleApplication1/Debug/main.obj.enc
 ConsoleApplication1/Debug/parcer.obj.enc
+ConsoleApplication1/Debug/preprocessor.obj.enc
+ConsoleApplication1/.vs/ConsoleApplication1/v15/ipch/AutoPCH/f8b554ea50072a16/PREPROCESSOR.ipch
+ConsoleApplication1/.vs/ConsoleApplication1/v15/ipch/AutoPCH/f8cd1eea501b6035/PREPROCESSOR.ipch
