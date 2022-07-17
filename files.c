@@ -1,6 +1,5 @@
-
 #include "files.h"
-
+#include "parcer.h"
 
 void open_files(int argc, char *argv[])
 {
@@ -10,7 +9,7 @@ void open_files(int argc, char *argv[])
 	char *file_name;
 	char buff[BUFF_LEN];
 
-	getcwd(buff, sizeof(buff));
+	/*getcwd(buff, sizeof(buff));*/
 	printf("YOU ARE IN OPEN_FILES");
 	for (i = 1; i < argc; i++)
 	{
@@ -23,7 +22,7 @@ void open_files(int argc, char *argv[])
 		strcat(file_name, argv[i]);
 		strcat(file_name, ".txt");
 
-		fptr = fopen("C:\\file.as", "r");
+		fptr = fopen("file.as", "r");
 		if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
 		{
 			fprintf(stderr, "Couldn't open file %s\n", file_name);

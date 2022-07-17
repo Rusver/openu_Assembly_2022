@@ -9,15 +9,15 @@ int first_read(FILE *fptr)
 	char**** macro_commands = NULL;
 	int list_len = 0;
 
-	test = &tst;
+	test = tst;
 	list_of_macros_names = &test;
 
 
-	macro_commands = (char*)malloc((sizeof(char*)));
-	macro_commands[0] = (char*)malloc((sizeof(char*)));
+	macro_commands = (char****)malloc((sizeof(char*)));
+	macro_commands[0] = (char***)malloc((sizeof(char*)));
 	macro_commands[0][0] = list_of_macros_names;
 	macro_commands[0][1] = list_of_macros_names;
-	macro_commands[1] = (char*)malloc((sizeof(char*)));
+	macro_commands[1] = (char***)malloc((sizeof(char*)));
 	macro_commands[1][1] = list_of_macros_names;
 
 

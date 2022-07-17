@@ -1,6 +1,7 @@
 #include "preprocessor.h"
 
-char* macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
+
+char** macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
 {
 	char buffer[BUFF_LEN];
 	char** list = NULL;
@@ -20,7 +21,7 @@ char* macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
 		list = (char**)malloc((sizeof(char*)));
 		printf("%s", buffer);
 		get_input(buffer, list, &list_len);
-		if (list && (is_macro(list)) == 1 || macro_counter)
+		if ((list && (is_macro(list)) == 1) || macro_counter)
 		{
 			if (is_end_of_macro(list, list_len))
 			{
@@ -41,7 +42,7 @@ char* macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
 			{
 				if (name_list_len > 1 && initizilied_flag == 0)
 				{
-					macro_commands[name_list_len - 1] = (char*)malloc(sizeof(char*));
+					macro_commands[name_list_len - 1] = (char***)malloc(sizeof(char*));
 					initizilied_flag = 1;
 				}
 					
