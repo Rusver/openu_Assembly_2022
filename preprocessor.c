@@ -1,4 +1,4 @@
-#include "preprocessor.h"
+#include "pre_and_parcer.h"
 
 
 char** macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
@@ -11,7 +11,7 @@ char** macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands)
 	int list_len = 0;
 	int name_list_len = 0;
 	int macro_len = 0;
-	int line_count = 0;
+	/*int line_count = 0;*/
 	int initizilied_flag = 0;
 	
 	list_of_macros_names = (char**)malloc(sizeof(char*));

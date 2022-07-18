@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "parcer.h"
 
 #define BUFF_LEN 256
 
