@@ -1,5 +1,5 @@
 #include "files.h"
-#include "parcer.h"
+#include "parser.h"
 
 void open_files(int argc, char *argv[])
 {
