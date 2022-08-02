@@ -8,6 +8,8 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 	char** list_of_macros_names = NULL;
 	char* macro_name;
 	int list_len = 0;
+    int flag_to_stop = 0;
+    int local_len =0;
 
 	/*int line_count = 0;*/
 	int initizilied_flag = 0;
@@ -20,11 +22,11 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 		list = malloc((sizeof(char*)));
 		printf("%s", buffer);
 		get_input(buffer, &list, &list_len);  /*by line*/
-		if ((list && (is_macro(list)) == 1) || *macro_list_len)
+		if ((list && (is_macro(list)) == 1) || flag_to_stop)
 		{
 			if (is_end_of_macro(list, list_len))
             {
-				*macro_list_len = -1;
+                flag_to_stop = 0;
 			}
 			else if (*macro_list_len == 0)
 			{
@@ -33,7 +35,8 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 				macro_name = list_of_macros_names[*name_list_len];
 				strncpy(macro_name, list[1], strlen(list[1]) + 1);
 				(macro_name)[strcspn(macro_name, "\n")] = 0;  /*delete \n in the macro name*/
-				(*name_list_len)++;
+                (*name_list_len)++;
+                flag_to_stop =1;
 				initizilied_flag = 0;
 			}
 			else
@@ -46,10 +49,9 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 
                 deep_copy_command_list(macro_commands, *name_list_len, *macro_list_len, list, list_len);
                 /*macro_commands[*name_list_len - 1][*macro_list_len - 1][list_len] = NULL;*/
-			}
-			*macro_list_len += 1;
-
-
+                if (flag_to_stop != 0)
+                    local_len++;
+            }
 		}
         free_list(list);
         free(list);
@@ -97,8 +99,11 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
 
                 parse_the_macro(new_file, macro_commands, *macro_list_len, *name_list_len);
             }
+            else
+            {
+                put_input(new_file, list, list_len);
+            }
         }
-        put_input(new_file, list, list_len);
     }
     fclose(new_file);
     return 1;

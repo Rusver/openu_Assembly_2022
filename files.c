@@ -60,13 +60,12 @@ int parse_the_macro(FILE* new_file, char**** macro_commands, int macro_list_len,
     {
         for(j = 0; j < name_list_len; j++)
         {
-            while ( (macro_commands[i][j][k] != NULL))
+            while ( macro_commands[i][j][k])
             {
-                fprintf(new_file, "%s", macro_commands[i][j][k]);
-                printf("blaladssdfsd");
-                printf("%s bla", macro_commands[i][j][k]);
+                fprintf(new_file, "%s ", macro_commands[i][j][k]);
                 k++;
             }
+            fprintf(new_file, "%c ", '\n');
         }
     }
 
