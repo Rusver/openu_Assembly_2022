@@ -13,4 +13,6 @@ enum are{A, R, E}; /* Creating constants for the ARE section in a machine code w
 enum addressing_num{IMMEDIATE, DIRECT, INDIRECT_ADDRESSING, DIRECT_REGISTER}; /* Numbers of addressing methods,
                                                                                represented by their name */
 
-void free_list(char** list, int list_len);
+
+
+void test_binary();

@@ -3,7 +3,17 @@
 
 int main(int argc, char *argv[])
 {
-    /*open_files(argc, argv);*/
+    open_files(argc, argv);
+
+
+
+
+    return 0;
+}
+
+
+void test_binary()
+{
     printf("~~~~~binaryTODecimal~~~~~\n");
     printf("%d\n", binaryToDecimal(1));
     printf("%d\n", binaryToDecimal(10));
@@ -32,19 +42,6 @@ int main(int argc, char *argv[])
     printf("%d\n", base32_to_binary('$'));
     printf("%d\n", base32_to_binary('%'));
     printf("%d\n", base32_to_binary('d'));
-
-
-
-    return 0;
 }
 
-void free_list(char** list, int list_len)
-{
-	int i;
-	for(i= list_len - 1; i >= 0; i--)
-	{
-		list[i] = NULL;
-		free(list[i]);
-	}
-}
 

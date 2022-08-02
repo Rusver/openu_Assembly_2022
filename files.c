@@ -5,9 +5,9 @@ void open_files(int argc, char *argv[])
 {
 
 	int i;
-	FILE *fptr;
-	char *file_name;
-	char buff[BUFF_LEN];
+    FILE *fptr;
+    char *file_name;
+    char buff[BUFF_LEN];  /*TODO: create error if no file*/
 
 	/*getcwd(buff, sizeof(buff));*/
 	printf("YOU ARE IN OPEN_FILES");
@@ -22,7 +22,7 @@ void open_files(int argc, char *argv[])
 		strcat(file_name, argv[i]);
 		strcat(file_name, ".txt");
 
-		fptr = fopen("file.as", "r");
+		fptr = fopen("file.as", "r"); /*TODO: make it dynamic*/
 		if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
 		{
 			fprintf(stderr, "Couldn't open file %s\n", file_name);
@@ -40,4 +40,36 @@ void open_files(int argc, char *argv[])
 		free(file_name);
 	}
 
+}
+
+int put_input(FILE* new_file, char** list, int list_len)
+{
+    int i=0;
+
+    for(i =0; i < list_len; i++)
+        fprintf(new_file, "%s ", list[i]);
+    fprintf(new_file, "%c", '\n');
+
+    return 1;
+}
+
+int parse_the_macro(FILE* new_file, char**** macro_commands, int macro_list_len, int name_list_len)
+{
+    int i,j, k=0;
+    for(i = 0; i < macro_list_len + 1; i++)
+    {
+        for(j = 0; j < name_list_len; j++)
+        {
+            while ( (macro_commands[i][j][k] != NULL))
+            {
+                fprintf(new_file, "%s", macro_commands[i][j][k]);
+                printf("blaladssdfsd");
+                printf("%s bla", macro_commands[i][j][k]);
+                k++;
+            }
+        }
+    }
+
+
+    return 1;
 }

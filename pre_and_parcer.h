@@ -3,11 +3,11 @@
 /**
  * handles the macro commands
  * @param fptr - the file we read from
- * @param macro_list_len - len of the commannds list
+ * @param name_list_len - len of the commannds list
  * @param macro_commands - in the end we get set of commands by [name][line][command]
  * @return list_of_macros_names
  */
-char** macro_handler(FILE* fptr, int * macro_list_len, char**** macro_commands);
+char** macro_handler(FILE* fptr, int * name_list_len, char**** macro_commands, int* macro_list_len);
 int check_definitions();
 int check_operations();
 
@@ -48,5 +48,19 @@ int is_end_of_macro(char** list, int list_len);
  * @param list - the seperated line
  * @param idx - index of the list
  */
-void get_input(char* line, char** list, int* idx);
+void get_input(char* line, char*** list, int* idx);
 
+/**
+ * this function will read the file and expand the macros - in a new file.
+ * @param fptr, list_of_macros_names, macro_commands
+ * @return
+ */
+
+
+int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_commands, int* name_list_len, int* macro_list_len);
+
+int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int* list_len);
+
+void deep_copy_command_list(char**** macro_commands, int name_list_len, int macro_list_len, char** list, int list_len);
+
+void free_list(char** list);
