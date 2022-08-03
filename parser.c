@@ -6,7 +6,7 @@ int first_read(FILE *fptr)
 	char tst[50] = "hello";
 	char* test = NULL;
 	char** list_of_macros_names = NULL;
-	char**** macro_commands = NULL;
+	char*** macro_commands = NULL;
 	int name_list_len = 0;
     int macro_list_len = 0;
 
@@ -14,8 +14,8 @@ int first_read(FILE *fptr)
 	list_of_macros_names = &test;
 
 
-	macro_commands = (char****)malloc((sizeof(char*)));
-	macro_commands[0] = (char***)malloc((sizeof(char*)));
+	macro_commands = malloc((sizeof(char*)));
+	macro_commands[0] = malloc((sizeof(char*)));
     /*
 	macro_commands[0][0] = list_of_macros_names;
 	macro_commands[0][1] = list_of_macros_names;
@@ -25,15 +25,16 @@ int first_read(FILE *fptr)
 
 	printf("YOU ARE IN THE FIRST READ");
 
-	list_of_macros_names = macro_handler(fptr, &name_list_len, macro_commands, &macro_list_len);
+	list_of_macros_names = macro_handler(fptr, &name_list_len, &macro_commands, &macro_list_len);
 	printf("list");
 	rewind(fptr);
 
-    write_expanded_file(fptr, list_of_macros_names, macro_commands, &name_list_len, &macro_list_len);
+    write_expanded_file(fptr, list_of_macros_names, &macro_commands, &name_list_len, &macro_list_len);
 
 
 
-	/*free_list(list_of_macros_names);*/
+    free_list(*macro_commands);
+    free(macro_commands);
 	return 1;
 }
 

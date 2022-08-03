@@ -10,6 +10,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 	int list_len = 0;
     int flag_to_stop = 0;
     int local_len =0;
+    char**** temp;
 
 	/*int line_count = 0;*/
 	int initizilied_flag = 0;
@@ -28,7 +29,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
             {
                 flag_to_stop = 0;
 			}
-			else if (*macro_list_len == 0)
+			else if (*name_list_len == 0)
 			{
 
 				list_of_macros_names[*name_list_len] = (char*)malloc(strlen(list[1]));
@@ -41,9 +42,11 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 			}
 			else
 			{
-				if (*name_list_len > 1 && initizilied_flag == 0)
+				if (*name_list_len >= 1 && initizilied_flag == 0)
 				{
-					macro_commands[*name_list_len - 1] = (char***)malloc(sizeof(char*));
+					temp = realloc(*macro_commands, sizeof(char*) * (*name_list_len + 1));
+                    if (temp != NULL)
+                        macro_commands = temp;
 					initizilied_flag = 1;
 				}
 
@@ -52,6 +55,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
                 if (flag_to_stop != 0)
                     local_len++;
             }
+
 		}
         free_list(list);
         free(list);
@@ -62,15 +66,15 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 
 void deep_copy_command_list(char**** macro_commands, int name_list_len, int macro_list_len, char** list, int list_len)
 {
+
     int i =0;
-    macro_commands[name_list_len - 1][macro_list_len - 1] = (char**)malloc((sizeof(char*)));
     for (i =0; i < list_len; i++)
     {
-        macro_commands[name_list_len - 1][macro_list_len - 1][i] = (char*)malloc(strlen(list[i])+1);
+        macro_commands[name_list_len - 1][macro_list_len - 1][i] = malloc(strlen(list[i])+1);
         strncpy(macro_commands[name_list_len - 1][macro_list_len - 1][i], list[i], strlen(list[i])+1);
     }
-    macro_commands[name_list_len - 1][macro_list_len - 1][i] = NULL;
 
+    /*macro_commands[name_list_len - 1][macro_list_len - 1][i] = NULL;*/
 }
 
 int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_commands, int* name_list_len, int* macro_list_len)
