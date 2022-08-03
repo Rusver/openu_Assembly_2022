@@ -7,7 +7,7 @@
  * @param macro_commands - in the end we get set of commands by [name][line][command]
  * @return list_of_macros_names
  */
-char** macro_handler(FILE* fptr, int * name_list_len, char**** macro_commands, int* macro_list_len);
+char** macro_handler(FILE* fptr, int * name_list_len, char***** macro_commands, int* macro_list_len);
 int check_definitions();
 int check_operations();
 

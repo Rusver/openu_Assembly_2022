@@ -55,19 +55,26 @@ int put_input(FILE* new_file, char** list, int list_len)
 
 int parse_the_macro(FILE* new_file, char**** macro_commands, int macro_list_len, int name_list_len)
 {
-    int i,j, k=0;
-    for(i = 0; i < macro_list_len + 1; i++)
+    int i=0,j=0, k=0;
+    for(i = 0; i < name_list_len; i++)
     {
-        for(j = 0; j < name_list_len; j++)
+        for (j=0; j < macro_list_len; j++)
         {
-            while ( macro_commands[i][j][k])
+            while (macro_commands[i][j][k])
             {
-                fprintf(new_file, "%s ", macro_commands[i][j][k]);
+                fprintf(new_file, "%s", macro_commands[i][j][k]);
+                if (macro_commands[i][j][k+1])
+                {
+                    fprintf(new_file, " ");
+                }
                 k++;
             }
-            fprintf(new_file, "%c ", '\n');
+            if (j != macro_list_len-1)
+                fprintf(new_file, "%c", '\n');
+            k=0;
         }
     }
+
 
 
     return 1;

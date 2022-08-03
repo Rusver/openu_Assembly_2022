@@ -1,15 +1,15 @@
 #include "pre_and_parcer.h"
 
 
-char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, int* macro_list_len) /* return macro_counter */
+char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, int* macro_list_len) /* return macro_counter */
 {
 	char buffer[BUFF_LEN];
+    char**** mc_list = *macro_commands; /* Make things easier by avoiding one * within the function.*/
 	char** list = NULL;
 	char** list_of_macros_names = NULL;
 	char* macro_name;
 	int list_len = 0;
     int flag_to_stop = 0;
-    int local_len =0;
     char**** temp;
 
 	/*int line_count = 0;*/
@@ -44,19 +44,20 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 			{
 				if (*name_list_len >= 1 && initizilied_flag == 0)
 				{
-					temp = realloc(*macro_commands, sizeof(char*) * (*name_list_len + 1));
+					temp = realloc(*mc_list, sizeof(char*) * (*name_list_len + 1));
                     if (temp != NULL)
-                        macro_commands = temp;
+                        mc_list = temp;
 					initizilied_flag = 1;
 				}
 
-                deep_copy_command_list(macro_commands, *name_list_len, *macro_list_len, list, list_len);
+                deep_copy_command_list(mc_list, *name_list_len, *macro_list_len, list, list_len);
                 /*macro_commands[*name_list_len - 1][*macro_list_len - 1][list_len] = NULL;*/
                 if (flag_to_stop != 0)
-                    local_len++;
+                    (*macro_list_len)++;
             }
 
 		}
+        *macro_commands = mc_list;
         free_list(list);
         free(list);
 	}
@@ -64,17 +65,23 @@ char** macro_handler(FILE* fptr, int* name_list_len, char**** macro_commands, in
 	return list_of_macros_names;
 }
 
-void deep_copy_command_list(char**** macro_commands, int name_list_len, int macro_list_len, char** list, int list_len)
+void deep_copy_command_list(char**** mc_list, int name_list_len, int macro_list_len, char** list, int list_len)
 {
-
     int i =0;
+    char** temp;
+
+    mc_list[name_list_len - 1][macro_list_len] = malloc(sizeof(char*));
+
     for (i =0; i < list_len; i++)
     {
-        macro_commands[name_list_len - 1][macro_list_len - 1][i] = malloc(strlen(list[i])+1);
-        strncpy(macro_commands[name_list_len - 1][macro_list_len - 1][i], list[i], strlen(list[i])+1);
-    }
+        mc_list[name_list_len - 1][macro_list_len][i] = malloc(strlen(list[i])+1);
+        strcpy(mc_list[name_list_len - 1][macro_list_len][i], list[i]);
 
-    /*macro_commands[name_list_len - 1][macro_list_len - 1][i] = NULL;*/
+        temp = realloc(mc_list[name_list_len - 1][macro_list_len], sizeof(char*) * ((i+1) + 1));
+        if (temp != NULL)
+            mc_list[name_list_len - 1][macro_list_len] = temp;
+    }
+    mc_list[name_list_len - 1][macro_list_len][i] = NULL;
 }
 
 int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_commands, int* name_list_len, int* macro_list_len)
