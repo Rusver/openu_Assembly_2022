@@ -30,7 +30,7 @@ void open_files(int argc, char *argv[])
 
 
 		/* Starts the first and second passes, and if they are finished successfully, writes the output files */
-		if (!first_read(fptr) && !second_read(fptr))
+		if (first_read(fptr) && second_read())
 			printf("write_output_files");
 		/*write_output_files(argv[i]);*/
 

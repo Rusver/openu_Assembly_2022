@@ -1,4 +1,7 @@
 #include "files.h"
+#include "hashTable.h"
+
+#define DECIMAL_ADDRESS 100
 
 /**
  * handles the macro commands
@@ -62,5 +65,7 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
 int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int* list_len);
 
 void deep_copy_command_list(char**** macro_commands, int name_list_len, int macro_list_len, char** list, int list_len);
+
+int is_label(char* list);
 
 void free_list(char** list);

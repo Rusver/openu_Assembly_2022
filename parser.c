@@ -1,17 +1,14 @@
 #include "pre_and_parcer.h"
 
+#
 
 int first_read(FILE *fptr)
 {
-	char tst[50] = "hello";
-	char* test = NULL;
+
 	char** list_of_macros_names = NULL;
 	char**** macro_commands = NULL;
 	int name_list_len = 0;
     int macro_list_len = 0;
-
-	test = tst;
-	list_of_macros_names = &test;
 
     macro_commands = malloc(sizeof(char*));
     *macro_commands = malloc(sizeof(char*));
@@ -34,19 +31,55 @@ int first_read(FILE *fptr)
     write_expanded_file(fptr, list_of_macros_names, macro_commands, &name_list_len, &macro_list_len);
 
 
-
+    /*free_list(**macro_commands);*/
     /*free_list(*macro_commands);*/
     free(macro_commands);
 	return 1;
 }
 
 
-int second_read(FILE *fptr)
+int second_read()
 {
+    char buffer[BUFF_LEN];
+    char** list = NULL;
+    int list_len = 0;
+    int lineIndex = 0;
+    FILE *fptr;
+
+    fptr = fopen("extended.as", "r");
+    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
+    {
+        fprintf(stderr, "Couldn't open file extended\n");
+    }
+
+    while (fgets(buffer, BUFF_LEN, fptr))
+    {
+        list = (char **) malloc((sizeof(char *)));
+        printf("%s", buffer);
+        get_input(buffer, &list, &list_len);
+        if (list) {
+
+            if (is_label(list[0]))
+            {
+                insert(list[0], DECIMAL_ADDRESS + lineIndex);
+            }
+        }
+        lineIndex++;
+    }
+
+
 
 	return 1;
 }
 
+int is_label(char* list)
+{
+    int len = strlen(list) -1;
+    if (list[len] == ':')
+        return 1;
+    return 0;
+
+}
 
 int is_macro(char** list)
 {

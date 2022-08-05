@@ -92,6 +92,8 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
     char** list = NULL;
     int list_len = 0;
     FILE* new_file = NULL;
+    int flag_to_stop = 0;
+
     new_file = fopen("extended.as", "w");
     if(new_file == NULL)
     {
@@ -100,13 +102,21 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
 
     while (fgets(buffer, BUFF_LEN, fptr)) {
         list = (char**)malloc((sizeof(char*)));
-        printf("%s", buffer);
+        /*printf("%s", buffer);*/
         get_input(buffer, &list, &list_len);
         if (list)
         {
-            if (has_macro(list_of_macros_names, list, name_list_len, &list_len))
+            /* if is macro then turn the flag and start record the commands */
+            if (is_macro(list) == 1 || flag_to_stop)
             {
-                printf("thats the macro");
+                flag_to_stop = 1;
+                if (is_end_of_macro(list, list_len)) {
+                    flag_to_stop = 0;
+                }
+            }
+            else if (has_macro(list_of_macros_names, list, name_list_len, &list_len))
+            {
+                printf("that׳s the macro");
 
                 parse_the_macro(new_file, macro_commands, *macro_list_len, *name_list_len);
             }

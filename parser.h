@@ -13,5 +13,7 @@ int first_read(FILE *fptr);
  * @param fptr
  * @return
  */
-int second_read(FILE *fptr);
+int second_read();
+
+
 

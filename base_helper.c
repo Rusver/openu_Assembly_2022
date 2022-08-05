@@ -67,3 +67,16 @@ void printBin(int a)
     }
     printf("\n");
 }
+
+int op_code_parser(char* opCode)
+{
+    int opCodeIndex, binary = 0;
+
+    for(opCodeIndex=0; opCodeIndex<16; opCodeIndex++)
+        if(strcmp(&opCode[opCodeIndex],opCode) == 0) {
+            binary = decimalToBin(opCodeIndex);
+        }
+
+
+    return binary;
+}

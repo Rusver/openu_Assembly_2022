@@ -3,6 +3,7 @@
 #include <math.h>
 #include <string.h>
 
+int op_code_parser(char* c);
 int binaryToDecimal(int bin);
 int decimalToBin(int decimal);
 char binary_to_base32(int bin);
