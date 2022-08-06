@@ -7,7 +7,7 @@ void assembler(FILE* fptr)
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
-    int lineIndex = 0;
+
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
@@ -17,15 +17,15 @@ void assembler(FILE* fptr)
         if (list) {
             if (!strcmp(list[1], ".data"))
             {
-                data_handler(buffer);
+                dc += data_handler(buffer);
             }
             else if(!strcmp(list[1], ".string"))
             {
-
+                dc += string_handler(list[2]);
             }
             else if(!strcmp(list[1], ".struct"))
             {
-
+                dc += struct_handler(buffer);
             }
             else if(!strcmp(list[1], ".extern"))
             {
@@ -40,16 +40,15 @@ void assembler(FILE* fptr)
                 /* opcode handler */
             }
         }
+        ic++;
     }
 }
 
 int data_handler(char* buffer)
 {
     char* token;
-    char* line_by_space;
     char* line_by_comma;
     int first_num_flag = 0;
-    int has_comma_flag = 0;
     int cspn = 0;
     int digit_len = 0;
     int digit_num = 0;
@@ -100,5 +99,63 @@ int data_handler(char* buffer)
         digit_num++;
         token = strtok(NULL, ",");
     }
-    return digit_num;
+    return digit_num - 1;
 }
+
+int string_handler(char* string)
+{
+    /*every character to byte*/
+
+    return strlen(string);
+}
+
+int struct_handler(char* buffer)
+{
+    char* line_by_comma;
+    char* line_by_sign;
+    char* token;
+    int token_len = 0;
+    int first_num_flag = 0;
+    int string_flag = 0;
+    int dc = 0;
+
+    line_by_comma = malloc(strlen(buffer));
+    line_by_sign = malloc(strlen(buffer));
+
+    strcpy(line_by_comma, buffer);
+    strcpy(line_by_sign, buffer);
+
+    token = strtok(line_by_comma, ",");
+
+    while (token != NULL)
+    {
+        token_len = strlen(token);
+        if (token[0] == '\t')
+            memmove(token, token + 1, token_len);
+
+        if (token[0] == ' ')
+            memmove(token, token + 1, token_len);
+
+        if(first_num_flag == 0) {
+            if (isdigit((token[token_len - 1])))
+            {
+                first_num_flag = 1;
+                dc++;
+            }
+
+        }
+        if(token[token_len - 1] == '\"' && string_flag == 0)
+        {
+            token = strtok(line_by_sign, "\"");
+            string_flag = 1;
+        }
+        else if(string_flag == 1)
+        {
+            token[strcspn(token, "\"")] = '\0';
+            dc += strlen(token)-1;
+        }
+        token = strtok(NULL, ",");
+    }
+    return dc;
+}
+

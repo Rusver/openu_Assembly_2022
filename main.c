@@ -4,6 +4,8 @@
 int main(int argc, char *argv[])
 {
     open_files(argc, argv);
+    /*printf("%d\n", base32_to_binary('@'));*/
+
 
 
     return 0;

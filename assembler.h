@@ -15,7 +15,8 @@ void assembler(FILE* fptr);
  * @return int - number of the digits
  */
 int data_handler(char* buffer);
-
+int string_handler(char* string);
+int struct_handler(char* buffer);
 
 #endif /*OPENU_ASSEMBLY_2022_ASSEMBLER_H*/
 
