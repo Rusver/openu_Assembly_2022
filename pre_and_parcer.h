@@ -1,7 +1,9 @@
 #include "files.h"
 #include "hashTable.h"
+#include "assembler.h"
 
 #define DECIMAL_ADDRESS 100
+
 
 /**
  * handles the macro commands
@@ -69,3 +71,11 @@ void deep_copy_command_list(char**** macro_commands, int name_list_len, int macr
 int is_label(char* list);
 
 void free_list(char** list);
+
+/**
+ * This function is handeling the table for the macros of the .as file
+ * @param fptr
+ * @return
+ */
+int label_handler(FILE* fptr);
+

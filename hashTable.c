@@ -1,7 +1,7 @@
 /*
 // Created by Ruslan Ver on 05/08/2022.
 */
-
+#include "files.h"
 #include "hashTable.h"
 
 int hashCode(int key) {
@@ -10,7 +10,7 @@ int hashCode(int key) {
 
 struct DataItem* search_by_key(int key) {
     /*get the hash*/
-    int hashIndex = hashCode(key);
+    int hashIndex = 0;
 
     /*move in array until an empty*/
     while(hashArray[hashIndex] != NULL) {
@@ -58,9 +58,6 @@ void insert(char* data, int key) {
     strcpy(ds, data);
     item->data = ds;
     item->key = key;
-
-    /*get the hash*/
-    hashIndex = hashCode(key);
 
     /*move in array until an empty or deleted cell*/
     while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->key != -1) {

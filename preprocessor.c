@@ -130,7 +130,30 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
     return 1;
 }
 
+int label_handler(FILE* fptr)
+{
+    char buffer[BUFF_LEN];
+    char** list = NULL;
+    int list_len = 0;
+    int lineIndex = 0;
 
+    while (fgets(buffer, BUFF_LEN, fptr))
+    {
+        list = (char **) malloc((sizeof(char *)));
+        printf("%s", buffer);
+        get_input(buffer, &list, &list_len);
+        if (list) {
+
+            if (is_label(list[0]))
+            {
+                list[0][strcspn(list[0], ":")] = '\0';
+                insert(list[0], DECIMAL_ADDRESS + lineIndex);
+            }
+        }
+        lineIndex++;
+    }
+    return 1;
+}
 
 int check_definitions()
 {

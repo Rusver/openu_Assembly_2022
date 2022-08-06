@@ -69,8 +69,7 @@ int parse_the_macro(FILE* new_file, char**** macro_commands, int macro_list_len,
                 }
                 k++;
             }
-            if (j != macro_list_len-1)
-                fprintf(new_file, "%c", '\n');
+            fprintf(new_file, "%c", '\n');
             k=0;
         }
     }

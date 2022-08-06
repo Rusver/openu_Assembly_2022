@@ -1,7 +1,5 @@
 #include "pre_and_parcer.h"
 
-#
-
 int first_read(FILE *fptr)
 {
 
@@ -40,10 +38,7 @@ int first_read(FILE *fptr)
 
 int second_read()
 {
-    char buffer[BUFF_LEN];
-    char** list = NULL;
-    int list_len = 0;
-    int lineIndex = 0;
+
     FILE *fptr;
 
     fptr = fopen("extended.as", "r");
@@ -52,20 +47,12 @@ int second_read()
         fprintf(stderr, "Couldn't open file extended\n");
     }
 
-    while (fgets(buffer, BUFF_LEN, fptr))
-    {
-        list = (char **) malloc((sizeof(char *)));
-        printf("%s", buffer);
-        get_input(buffer, &list, &list_len);
-        if (list) {
+    label_handler(fptr);
 
-            if (is_label(list[0]))
-            {
-                insert(list[0], DECIMAL_ADDRESS + lineIndex);
-            }
-        }
-        lineIndex++;
-    }
+    rewind(fptr);
+
+    assembler(fptr);
+
 
 
 
@@ -103,11 +90,16 @@ int is_end_of_macro(char** list, int list_len)
 void get_input(char* line, char*** list, int *idx)
 {
 	char *token;
+    char* local_line;
     char **list_local = *list; /* Make things easier by avoiding one * within the function.*/
     char **temp = NULL;
 
 	*idx = 0;
-	token = strtok(line, " "); /*extract the first token*/
+
+    local_line = malloc(strlen(line));
+    strcpy(local_line, line);
+
+	token = strtok(local_line, " "); /*extract the first token*/
 	/* loop through the string to extract all other tokens */
 	while (token != NULL)
 	{
