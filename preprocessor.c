@@ -33,7 +33,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, i
 			{
 
 				list_of_macros_names[*name_list_len] = (char*)malloc(strlen(list[1]));
-				macro_name = list_of_macros_names[*name_list_len];
+				macro_name = list_of_macros_names[*name_list_len]; /*TODO: CHECK REMOVING THIS */
 				strncpy(macro_name, list[1], strlen(list[1]) + 1);
 				(macro_name)[strcspn(macro_name, "\n")] = 0;  /*delete \n in the macro name*/
                 (*name_list_len)++;

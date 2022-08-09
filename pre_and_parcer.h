@@ -29,7 +29,7 @@ int first_read(FILE *fptr);
  * @param fptr
  * @return
  */
-int second_read(FILE *fptr);
+int second_read();
 
 /**
  * boolean function that check if we have "macro" in the list
