@@ -1,10 +1,19 @@
 #include "main.h"
 #include "base_helper.h"
 
-int main(int argc, char *argv[])
-{
-    open_files(argc, argv);
+int main(int argc, char *argv[]) {
+    /*open_files(argc, argv);*/
     /*printf("%d\n", base32_to_binary('@'));*/
+
+    char res[100];
+    int i = 0;
+    char *x;
+    for (i = 100; i < 257; i++)
+    {
+        x = decimal_to_mixedBase32(res, i);
+        printf("%d\t", i);
+        printf("%s\n", x);
+    }
 
 
 

@@ -68,6 +68,9 @@ void printBin(int a)
     printf("\n");
 }
 
+
+
+
 int op_code_parser(char* opCode)
 {
     int opCodeIndex, binary = 0;
@@ -80,3 +83,51 @@ int op_code_parser(char* opCode)
 
     return binary;
 }
+
+char* parseToBaseSymbols32(char* rawBase32)
+{
+    char* base32 = rawBase32;
+
+    base32[0] = binary_to_base32(rawBase32[0] - '0');
+    if(isdigit(base32[1])) base32[1] = binary_to_base32(rawBase32[1] - '0');
+
+    return base32;
+}
+
+char parseToBase32(int num)
+{
+    if (num >= 0 && num <= 9)
+        return (char)(num + '0');
+    else
+        return (char)(num - 10 + 'a');
+}
+
+void reverse_string(char *str)
+{
+    int len = strlen(str);
+    int i;
+    for (i = 0; i < len/2; i++)
+    {
+        char temp = str[i];
+        str[i] = str[len-i-1];
+        str[len-i-1] = temp;
+    }
+}
+
+char* decimal_to_mixedBase32(char res[], int decimal)
+{
+    int index = 0;
+
+    while (decimal > 0)
+    {
+        res[index++] = parseToBase32(decimal % 32);
+        decimal /= 32;
+    }
+    res[index] = '\0';
+
+    reverse_string(res);
+
+    return parseToBaseSymbols32(res);
+}
+
+

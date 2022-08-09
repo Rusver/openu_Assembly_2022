@@ -4,6 +4,7 @@ void assembler(FILE* fptr)
 {
     int ic = 0;
     int dc = 0;
+
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
