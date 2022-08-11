@@ -29,7 +29,7 @@ int first_read(FILE *fptr)
     write_expanded_file(fptr, list_of_macros_names, macro_commands, &name_list_len, &macro_list_len);
 
 
-    /*free_list(**macro_commands);*/
+    free_list(**macro_commands);
     free_list_of_pointer(*macro_commands);
     free(macro_commands);
 	return 1;
@@ -124,7 +124,7 @@ void get_input(char* line, char*** list, int *idx)
 
     list_local[*idx] = NULL; /*to know when the list ends */
     *list = list_local;
-    free(temp);
+    free(local_line);
 }
 
 int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int* list_len)

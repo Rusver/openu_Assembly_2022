@@ -61,7 +61,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, i
         free_list(list);
         free(list);
 	}
-	
+
 	return list_of_macros_names;
 }
 
