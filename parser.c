@@ -29,15 +29,14 @@ int first_read(FILE *fptr)
     write_expanded_file(fptr, list_of_macros_names, macro_commands, &name_list_len, &macro_list_len);
 
 
-
-    free_arr_of_commands(macro_commands, macro_list_len, name_list_len);
-    free(**macro_commands);
-    **macro_commands = NULL;
-    free(*macro_commands);
-    *macro_commands = NULL;
+        free_list(list_of_macros_names);
+        free(list_of_macros_names);
+     free_arr_of_commands(macro_commands, macro_list_len, name_list_len);
+     free(*macro_commands);
+        free(*(macro_commands+1));
     free(macro_commands);
     macro_commands = NULL;
-	return 1;
+    return 1;
 }
 
 
@@ -101,7 +100,7 @@ void get_input(char* line, char*** list, int *idx)
 
 	*idx = 0;
 
-    local_line = malloc(strlen(line));
+    local_line = malloc(strlen(line)+1);
     strcpy(local_line, line);
 
 	token = strtok(local_line, " "); /*extract the first token*/
@@ -113,7 +112,7 @@ void get_input(char* line, char*** list, int *idx)
 
 		printf("%s\n", token);
 
-        list_local[*idx] = malloc(strlen(token)+1);
+                list_local[*idx] = malloc(strlen(token)+1);
 		strcpy(list_local[*idx], token);
 		token = strtok(NULL, " ");   /*get every token*/
 		(*idx)++;
@@ -122,8 +121,7 @@ void get_input(char* line, char*** list, int *idx)
         temp = realloc(list_local, sizeof(char*) * (*idx + 1));
         if (temp != NULL)
         {
-            list_local = temp;
-            temp = NULL;
+                list_local = temp;
         }
 
 
@@ -181,9 +179,12 @@ void free_arr_of_commands(char**** list, int list_len, int name_len)
                 i++;
             }
             i = 0;
+            free(list[k][j]);
+                list[k][j] = NULL;
         }
+        free(list[k]);
+            list[k] = NULL;
         j=0;
     }
-
 }
 

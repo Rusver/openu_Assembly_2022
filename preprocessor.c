@@ -72,7 +72,6 @@ char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, i
 void deep_copy_command_list(char**** mc_list, int name_list_len, int macro_list_len, char** list, int list_len)
 {
     int i =0;
-    char** temp;
 
     mc_list[name_list_len - 1][macro_list_len] = malloc(sizeof(char*));
 
@@ -81,9 +80,9 @@ void deep_copy_command_list(char**** mc_list, int name_list_len, int macro_list_
         mc_list[name_list_len - 1][macro_list_len][i] = malloc(strlen(list[i])+1);
         strcpy(mc_list[name_list_len - 1][macro_list_len][i], list[i]);
 
-        temp = realloc(mc_list[name_list_len - 1][macro_list_len], sizeof(char*) * ((i+1) + 1));
-        if (temp != NULL)
-            mc_list[name_list_len - 1][macro_list_len] = temp;
+        mc_list[name_list_len - 1][macro_list_len] = realloc(mc_list[name_list_len - 1][macro_list_len], sizeof(char*) * ((i+1) + 1));
+
+
     }
     mc_list[name_list_len - 1][macro_list_len][i] = NULL;
 }
@@ -129,6 +128,8 @@ int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_
                 put_input(new_file, list, list_len);
             }
         }
+            free_list(list);
+            free(list);
     }
     fclose(new_file);
     return 1;
@@ -143,7 +144,7 @@ int label_handler(FILE* fptr)
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
-        list = (char **) malloc((sizeof(char *)));
+            list = malloc((sizeof(char*)));
         printf("%s", buffer);
         get_input(buffer, &list, &list_len);
         if (list) {
@@ -155,8 +156,10 @@ int label_handler(FILE* fptr)
             }
         }
         lineIndex++;
+        free_list(list);
         free(list);
     }
+
     return 1;
 }
 

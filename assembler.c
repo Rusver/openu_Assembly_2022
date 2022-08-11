@@ -42,9 +42,13 @@ void assembler(FILE* fptr)
             }
         }
         ic++;
+        free_list(list);
+        free(list);
     }
     printf("data counter: %d ", dc);
     printf("%s", decimal_to_mixedBase32(res,dc));
+
+
 }
 
 int data_handler(char* buffer)
@@ -102,6 +106,8 @@ int data_handler(char* buffer)
         digit_num++;
         token = strtok(NULL, ",");
     }
+
+    free(line_by_comma);
     return digit_num - 1;
 }
 
@@ -159,6 +165,8 @@ int struct_handler(char* buffer)
         }
         token = strtok(NULL, ",");
     }
+    free(line_by_comma);
+    free(line_by_sign);
     return dc;
 }
 
