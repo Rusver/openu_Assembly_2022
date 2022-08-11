@@ -13,7 +13,7 @@ void open_files(int argc, char *argv[])
 	printf("YOU ARE IN OPEN_FILES");
 	for (i = 1; i < argc; i++)
 	{
-		file_name = (char *)malloc(strlen(buff)+ 2 + strlen(argv[i]) + strlen(".txt") + 1);
+		file_name = malloc(strlen(buff)+ 2 + strlen(argv[i]) + strlen(".txt") + 1);
 		if (!file_name)
 			printf("memory allocation failed");
 

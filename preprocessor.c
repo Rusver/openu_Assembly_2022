@@ -42,11 +42,15 @@ char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, i
 			}
 			else
 			{
-				if (*name_list_len >= 1 && initizilied_flag == 0)
-				{
-					temp = realloc(*mc_list, sizeof(char*) * (*name_list_len + 1));
+				if (*name_list_len >= 1 && initizilied_flag == 0) {
+                    temp = realloc(*mc_list, sizeof(char *) * (*name_list_len + 1));
                     if (temp != NULL)
+                    {
                         mc_list = temp;
+                        temp = NULL;
+                    }
+
+
 					initizilied_flag = 1;
 				}
 

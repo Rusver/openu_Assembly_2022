@@ -121,7 +121,12 @@ void get_input(char* line, char*** list, int *idx)
         /* Increase array size to hold 1 more entry. */
         temp = realloc(list_local, sizeof(char*) * (*idx + 1));
         if (temp != NULL)
+        {
             list_local = temp;
+            temp = NULL;
+        }
+
+
 
 	}
 	if (*idx != 0)
