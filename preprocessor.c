@@ -151,6 +151,7 @@ int label_handler(FILE* fptr)
             }
         }
         lineIndex++;
+        free(list);
     }
     return 1;
 }

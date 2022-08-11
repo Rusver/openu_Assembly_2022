@@ -2,22 +2,27 @@
 #include "base_helper.h"
 
 int main(int argc, char *argv[]) {
-    /*open_files(argc, argv);*/
-    /*printf("%d\n", base32_to_binary('@'));*/
+    open_files(argc, argv);
+    /*test_base32();*/
 
+
+
+
+
+    return 0;
+}
+
+void test_base32()
+{
     char res[100];
     int i = 0;
     char *x;
     for (i = 100; i < 257; i++)
     {
-        x = decimal_to_mixedBase32(res, i);
+        x = decimal_to_mixedBase32(res,i);
         printf("%d\t", i);
         printf("%s\n", x);
     }
-
-
-
-    return 0;
 }
 
 

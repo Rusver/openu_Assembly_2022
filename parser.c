@@ -30,7 +30,7 @@ int first_read(FILE *fptr)
 
 
     /*free_list(**macro_commands);*/
-    /*free_list(*macro_commands);*/
+    free_list_of_pointer(*macro_commands);
     free(macro_commands);
 	return 1;
 }
@@ -124,6 +124,7 @@ void get_input(char* line, char*** list, int *idx)
 
     list_local[*idx] = NULL; /*to know when the list ends */
     *list = list_local;
+    free(temp);
 }
 
 int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int* list_len)
@@ -148,6 +149,16 @@ int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int*
 }
 
 void free_list(char** list)
+{
+    int i=0;
+    while (list[i])
+    {
+        free(list[i]);
+        i++;
+    }
+}
+
+void free_list_of_pointer(char*** list)
 {
     int i=0;
     while (list[i])

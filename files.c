@@ -36,7 +36,6 @@ void open_files(int argc, char *argv[])
 
 
 		fclose(fptr); /* Closes the file after reading and frees the file_name string for the next file name */
-		file_name = NULL;
 		free(file_name);
 	}
 
@@ -48,6 +47,14 @@ int put_input(FILE* new_file, char** list, int list_len)
 
     for(i =0; i < list_len; i++)
         fprintf(new_file, "%s ", list[i]);
+    fprintf(new_file, "%c", '\n');
+
+    return 1;
+}
+
+int put_word(FILE* new_file, char* list, int list_len)
+{
+    fprintf(new_file, "%s ", list);
     fprintf(new_file, "%c", '\n');
 
     return 1;

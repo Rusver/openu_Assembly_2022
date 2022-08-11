@@ -22,12 +22,15 @@ void open_files(int argc, char *argv[]);
  * @return
  */
 int put_input(FILE* new_file, char** list, int list_len);
+int put_word(FILE* new_file, char* list, int list_len);
 
 /**
  * a function that will change the macro to the set of commands
  * @return
  */
 int parse_the_macro(FILE* new_file, char**** macro_commands, int macro_list_len, int name_list_len);
+
+
 
 void write_ob_file(FILE *fptr);
 void write_ent_file();

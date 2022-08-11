@@ -8,7 +8,7 @@ void assembler(FILE* fptr)
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
-
+    char res[100];
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
@@ -30,19 +30,21 @@ void assembler(FILE* fptr)
             }
             else if(!strcmp(list[1], ".extern"))
             {
-
+                dc += extern_handler(buffer);
             }
             else if(!strcmp(list[1], ".entry"))
             {
-
+                dc += entry_handler(buffer);
             }
             else
             {
-                /* opcode handler */
+                dc += opcode_handler(buffer);
             }
         }
         ic++;
     }
+    printf("data counter: %d ", dc);
+    printf("%s", decimal_to_mixedBase32(res,dc));
 }
 
 int data_handler(char* buffer)
@@ -160,3 +162,46 @@ int struct_handler(char* buffer)
     return dc;
 }
 
+int extern_handler(char* buffer)
+{
+    FILE* fptr;
+    fptr = fopen("ps.ext", "w");
+    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
+    {
+        fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
+    }
+
+    put_word(fptr, &buffer[1], strlen(&buffer[1]));
+
+    fclose(fptr);
+    return 1;
+}
+
+
+int entry_handler(char* buffer)
+{
+    FILE* fptr;
+    fptr = fopen("ps.ent", "w");
+    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
+    {
+        fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
+        return 0;
+    }
+
+    put_word(fptr, &buffer[1], strlen(&buffer[1]));
+
+    fclose(fptr);
+    return 1;
+}
+
+int opcode_handler(char* buffer)
+{
+    /* opcode_handler*/
+    if (op_code_parser(&buffer[0]))
+        return 1;
+    if (op_code_parser((&buffer[0])))
+        return 0;
+
+
+    return 1;
+}

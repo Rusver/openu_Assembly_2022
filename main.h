@@ -18,3 +18,4 @@ enum addressing_num{IMMEDIATE, DIRECT, INDIRECT_ADDRESSING, DIRECT_REGISTER}; /*
 int hash_table_len = 0;
 
 void test_binary();
+void test_base32();
