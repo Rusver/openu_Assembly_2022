@@ -29,9 +29,14 @@ int first_read(FILE *fptr)
     write_expanded_file(fptr, list_of_macros_names, macro_commands, &name_list_len, &macro_list_len);
 
 
-    free_list(**macro_commands);
-    free_list_of_pointer(*macro_commands);
+
+    free_arr_of_commands(macro_commands, macro_list_len, name_list_len);
+    free(**macro_commands);
+    **macro_commands = NULL;
+    free(*macro_commands);
+    *macro_commands = NULL;
     free(macro_commands);
+    macro_commands = NULL;
 	return 1;
 }
 
@@ -154,17 +159,26 @@ void free_list(char** list)
     while (list[i])
     {
         free(list[i]);
+        list[i] = NULL;
         i++;
     }
 }
 
-void free_list_of_pointer(char*** list)
+void free_arr_of_commands(char**** list, int list_len, int name_len)
 {
-    int i=0;
-    while (list[i])
+    int i=0, j=0, k =0;
+    for(k=0; k < name_len; k++)
     {
-        free(list[i]);
-        i++;
+        for(j=0; j < list_len; j++) {
+            while (list[k][j][i]) {
+                free(list[k][j][i]);
+                list[k][j][i] = NULL;
+                i++;
+            }
+            i = 0;
+        }
+        j=0;
     }
+
 }
 

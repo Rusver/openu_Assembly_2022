@@ -79,3 +79,6 @@ void free_list(char** list);
  */
 int label_handler(FILE* fptr);
 
+void free_arr_of_commands(char**** list, int macro_list_len, int name_list_len);
+
+

@@ -13,8 +13,6 @@ char* decimal_to_mixedBase32(char res[], int decimal);
 void reverse_string(char *str);
 char parseToBase32(int num);
 char* parseToBaseSymbols32(char* rawBase32);
-void free_list(char** list);
-void free_list_of_pointer(char*** list);
 
 
 /**
