@@ -38,10 +38,11 @@ void assembler(FILE* fptr)
             }
             else
             {
-                dc += opcode_handler(buffer);
+                opcode_handler(buffer);
             }
         }
         ic++;
+        /*print_finish(&ic, binaryTODECIMAL(binary_code))*/
         free_list(list);
         free(list);
     }
@@ -80,14 +81,14 @@ int data_handler(char* buffer)
             if (isdigit((token[strlen(token) - 1])))
                 first_num_flag = 1;
             else
-                printf("Error! the .data is not right");
+                printf("Error! the .data is not right\n");
         }
         else {
             cspn = strcspn(token, "\n");
             digit_len = strlen(token);
             if (token[0] == '\n')
             {
-                printf("ERROR! there is a comma in the last digit");
+                printf("ERROR! there is a comma in the last digit\n");
                 digit_num--;
             }
             if (cspn != 0 && cspn < digit_len)
@@ -100,7 +101,7 @@ int data_handler(char* buffer)
                 token[1] = '\0';
             }
             if(!isdigit((token[0])))
-                printf("Error! the .data is not right after the first comma");
+                printf("Error! the .data is not right after the first comma\n");
         }
 
         digit_num++;
@@ -204,12 +205,83 @@ int entry_handler(char* buffer)
 
 int opcode_handler(char* buffer)
 {
-    /* opcode_handler*/
-    if (op_code_parser(&buffer[0]))
-        return 1;
-    if (op_code_parser((&buffer[0])))
-        return 0;
+    char* token;
+    char* line_by_comma;
+    int i =0;
+    int opcode = -1;
+    int opcode_flag = 0;
 
+    char* binary_op_code_string;
+    int from_address = 0;
+    int address_type = -1;
+    int binary_code = -1;
+    char temp[100];
+
+
+    line_by_comma = malloc(strlen(buffer));
+    strcpy(line_by_comma, buffer);
+
+
+    token = strtok(line_by_comma, " ");
+    /* opcode_handler*/
+
+    while (token != NULL) {
+        if (opcode_flag == 0)
+        {
+            opcode = op_code_parser(token);
+            if (opcode)
+            {
+                opcode = opcode - 1;
+                opcode_flag = 1;
+            }
+        }
+        else
+        {
+            if(token[0] == 'r')
+            {
+                address_type = 3;
+            }
+            else if(token[0] == '#')
+            {
+                if (token[1] == '-' || token[1] == '+')
+                {
+                    if (isdigit((token[2])))
+                    {
+                        address_type = 0;
+                    }
+                    else printf("Error! the .data is not right after the first comma\n");
+                }
+                else if (isdigit((token[1])))
+                {
+                    address_type = 0;
+                }
+                else printf("Error OpCodeHandler! this is not digit\n");
+            }
+
+        }
+
+        token = strtok(NULL, " ");
+        i++;
+    }
+    /*check which type of register it is*/
+    decimal_to_mixedBase32(temp, binary_code);
 
     return 1;
+}
+
+
+char* int_to_string(int x)
+{
+    int length = snprintf( NULL, 0, "%d", x );
+    char* str = malloc( length + 1 );
+    snprintf( str, length + 1, "%d", x );
+
+    return str;
+}
+
+int concatenate(int x, int y) {
+    int pow = 10;
+    while(y >= pow)
+        pow *= 10;
+    return x * pow + y;
 }

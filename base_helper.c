@@ -3,6 +3,9 @@
 char symbols[32]={'!','@','#','$','%','^','&','*','<','>',
                   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v'};
 
+char *opCodes[16] = {"mov","cmp","add","sub","not","clr","lea","inc","dec","jmp","bne","get","prn","jsr","rts","hlt"};
+
+
 
 int binaryToDecimal(int bin) {
 
@@ -76,8 +79,9 @@ int op_code_parser(char* opCode)
     int opCodeIndex, binary = 0;
 
     for(opCodeIndex=0; opCodeIndex<16; opCodeIndex++)
-        if(strcmp(&opCode[opCodeIndex],opCode) == 0) {
+        if(strcmp(opCodes[opCodeIndex],opCode) == 0) {
             binary = decimalToBin(opCodeIndex);
+            binary += 1; /*for the return*/
         }
 
 

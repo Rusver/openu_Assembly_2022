@@ -33,7 +33,6 @@ int first_read(FILE *fptr)
         free(list_of_macros_names);
      free_arr_of_commands(macro_commands, macro_list_len, name_list_len);
      free(*macro_commands);
-        free(*(macro_commands+1));
     free(macro_commands);
     macro_commands = NULL;
     return 1;

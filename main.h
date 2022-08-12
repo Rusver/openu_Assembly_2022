@@ -4,7 +4,7 @@
 #include <string.h>
 
 #define BUFF_LEN 256
-char *opCodes[16] = {"mov","cmp","add","sub","not","clr","lea","inc","dec","jmp","bne","get","prn","jsr","rts","hlt"};
+
 enum op_num{MOV, CMP, ADD, SUB, NOT, CLR, LEA, INC,
     DEC, JMP, BNE, GET, PRN, JSR, RTS, HLT}; /* Matching the operations in the assembly language to numbers */
 enum def_num{DATA, STRING, EXTERN, ENTRY, CODE}; /* Matching the definitions in the assembly language to numbers */
