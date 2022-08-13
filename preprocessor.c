@@ -145,11 +145,12 @@ int label_handler(FILE* fptr)
     char** temp;
     int idx = 0;
 
+
+    list = malloc(sizeof(char*));
+    ext = malloc(sizeof(char*));
+
     while (fgets(buffer, BUFF_LEN, fptr))
     {
-        list = malloc(sizeof(char*));
-        ext = malloc(sizeof(char*));
-        *ext = NULL;
         printf("%s", buffer);
         get_input(buffer, &list, &list_len);
         if (list) {
@@ -162,29 +163,45 @@ int label_handler(FILE* fptr)
                 else
                     insert(list[0], DECIMAL_ADDRESS + lineIndex, 0);
             }
-            if(strcmp(list[0], ".extern")) {
-                ext[idx] = malloc(strlen(list[1]));
-                strcpy(ext[idx], list[1]);
-                idx++;
-                temp = realloc(ext, sizeof(char*) * ((idx+1) + 1));
-                if (temp != NULL)
-                    ext = temp;
-                else printf("Error! can't create ext");
+            if(!strcmp(list[0], ".extern")) {
+                    realloc_helper(&ext, list[1], idx);
+                    idx++;
+
 
             }
-
+            free_list(list);
 
         }
+    }
         ext[idx] = NULL;
+
         lineIndex++;
-        free_list(list);
-        free(list);
 
         free_list(ext);
         free(ext);
-    }
+        ext = NULL;
+
+        free(list);
+        list = NULL;
 
     return 1;
+}
+
+void realloc_helper(char*** list, char* word, int idx)
+{
+        char** local_list = *list;
+        char **temp;
+
+        local_list[idx] = malloc(sizeof (word));
+        strcpy(local_list[idx], word);
+        idx++;
+        temp = realloc(local_list, sizeof(char*) * ((idx+1)+1 ));
+        if (temp != NULL)
+                local_list  = temp;
+        else printf("Error! can't create ext");
+
+        *list = local_list;
+
 }
 
 int is_in_ext_list(char* word, char** list)

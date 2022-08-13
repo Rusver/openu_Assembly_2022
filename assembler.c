@@ -266,8 +266,7 @@ int opcode_handler(char* buffer)
     }
     binary_code = concatenate(binary_code, are_type);
     /*check which type of register it is*/
-
-
+    free(line_by_comma);
     return binary_code;
 }
 

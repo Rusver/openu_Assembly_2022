@@ -3,6 +3,7 @@
 #include "pre_and_parcer.h"
 #include <ctype.h>
 #include "base_helper.h"
+#include <stdio.h>
 #define ADDRESS_START 100
 
 /**
