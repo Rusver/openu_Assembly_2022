@@ -111,7 +111,7 @@ void get_input(char* line, char*** list, int *idx)
 
 		printf("%s\n", token);
 
-                list_local[*idx] = malloc(strlen(token)+1);
+        list_local[*idx] = malloc(strlen(token)+1);
 		strcpy(list_local[*idx], token);
 		token = strtok(NULL, " ");   /*get every token*/
 		(*idx)++;

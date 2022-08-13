@@ -1,14 +1,23 @@
 #include "assembler.h"
+#include "hashTable.h"
 
 void assembler(FILE* fptr)
 {
     int ic = 0;
     int dc = 0;
 
+    FILE* last_file;
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
-    char res[100];
+    char res[BUFF_LEN];
+    int binary_code = 160;
+
+    last_file = fopen("ps.ob", "w");
+    if (!last_file)
+    {
+        fprintf(stderr, "Couldn't open file %s\n", "ps.ob");
+    }
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
@@ -28,28 +37,30 @@ void assembler(FILE* fptr)
             {
                 dc += struct_handler(buffer);
             }
-            else if(!strcmp(list[1], ".extern"))
+            if(!strcmp(list[0], ".extern"))
             {
-                dc += extern_handler(buffer);
+                extern_handler(buffer);
             }
-            else if(!strcmp(list[1], ".entry"))
+            else if(!strcmp(list[0], ".entry"))
             {
-                dc += entry_handler(buffer);
+                printf("ATTENTION! Entry Detected!");
+                entry_handler(buffer);
             }
             else
             {
-                opcode_handler(buffer);
+                binary_code =  opcode_handler(buffer);
             }
         }
+
+        assembly_print(last_file ,ADDRESS_START+ic, binary_code);
         ic++;
-        /*print_finish(&ic, binaryTODECIMAL(binary_code))*/
+
         free_list(list);
         free(list);
     }
     printf("data counter: %d ", dc);
     printf("%s", decimal_to_mixedBase32(res,dc));
-
-
+    fclose(last_file);
 }
 
 int data_handler(char* buffer)
@@ -171,7 +182,7 @@ int struct_handler(char* buffer)
     return dc;
 }
 
-int extern_handler(char* buffer)
+void extern_handler(char* buffer)
 {
     FILE* fptr;
     fptr = fopen("ps.ext", "w");
@@ -183,24 +194,23 @@ int extern_handler(char* buffer)
     put_word(fptr, &buffer[1], strlen(&buffer[1]));
 
     fclose(fptr);
-    return 1;
+
 }
 
 
-int entry_handler(char* buffer)
+void entry_handler(char* buffer)
 {
     FILE* fptr;
     fptr = fopen("ps.ent", "w");
     if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
     {
         fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
-        return 0;
     }
 
     put_word(fptr, &buffer[1], strlen(&buffer[1]));
 
     fclose(fptr);
-    return 1;
+
 }
 
 int opcode_handler(char* buffer)
@@ -213,10 +223,12 @@ int opcode_handler(char* buffer)
 
     char* binary_op_code_string;
     int from_address = 0;
-    int address_type = -1;
+    int ad_type = -1;
     int binary_code = -1;
-    char temp[100];
-
+    char temp[BUFF_LEN];
+    int are_type;
+    struct DataItem* item;
+    char* str;
 
     line_by_comma = malloc(strlen(buffer));
     strcpy(line_by_comma, buffer);
@@ -233,46 +245,78 @@ int opcode_handler(char* buffer)
             {
                 opcode = opcode - 1;
                 opcode_flag = 1;
+                binary_code = opcode;
             }
         }
         else
         {
-            if(token[0] == 'r')
+            ad_type = address_type(token);
+            str = strtok(token, ".");
+            if (ad_type == 1 || ad_type == 2)
             {
-                address_type = 3;
+                item = search_by_string(str);
+                if (item)
+                    are_type = item->type;
             }
-            else if(token[0] == '#')
-            {
-                if (token[1] == '-' || token[1] == '+')
-                {
-                    if (isdigit((token[2])))
-                    {
-                        address_type = 0;
-                    }
-                    else printf("Error! the .data is not right after the first comma\n");
-                }
-                else if (isdigit((token[1])))
-                {
-                    address_type = 0;
-                }
-                else printf("Error OpCodeHandler! this is not digit\n");
-            }
-
+            binary_code = concatenate(binary_code,ad_type);
         }
 
         token = strtok(NULL, " ");
         i++;
     }
+    binary_code = concatenate(binary_code, are_type);
     /*check which type of register it is*/
-    decimal_to_mixedBase32(temp, binary_code);
 
-    return 1;
+
+    return binary_code;
 }
 
+int address_type(char* word)
+{
+    int address_type = -1;
+    int cspn;
+    int word_len;
+
+    if(word[0] == 'r')
+    {
+        address_type = 3;
+    }
+    else if(word[0] == '#')
+    {
+        if (word[1] == '-' || word[1] == '+')
+        {
+            if (isdigit((word[2])))
+            {
+                address_type = 0;
+            }
+            else printf("Error! the .data is not right after the first comma\n");
+        }
+        else if (isdigit((word[1])))
+        {
+            address_type = 0;
+        }
+        else printf("Error OpCodeHandler! this is not digit\n");
+    }
+    else
+    {
+        cspn = strcspn(word, ".");
+        word_len = strlen(word);
+        if (search_by_string(word))
+        {
+            return 1;
+        }
+        else if (cspn != 0 && cspn < word_len)
+        {
+            return 2;
+        }
+    }
+
+    return address_type;
+}
 
 char* int_to_string(int x)
 {
-    int length = snprintf( NULL, 0, "%d", x );
+    int length = snprintf( NULL, 0, "%d", x);
     char* str = malloc( length + 1 );
     snprintf( str, length + 1, "%d", x );
 
@@ -284,4 +328,28 @@ int concatenate(int x, int y) {
     while(y >= pow)
         pow *= 10;
     return x * pow + y;
+}
+
+void assembly_print(FILE* fptr, int ic, int dc)
+{
+
+    char ic_base32_res[BUFF_LEN];
+    char dc_base32_res[BUFF_LEN];
+
+    char *ic_base32;
+    char *dc_base32;
+
+    ic_base32 = decimal_to_mixedBase32(ic_base32_res,ic);
+    dc_base32 = decimal_to_mixedBase32(dc_base32_res,dc);
+
+    put_word_singleLine(fptr,ic_base32, strlen(ic_base32));
+    put_word_singleLine(fptr,"\t", 1);
+    put_word(fptr,dc_base32, strlen(dc_base32));
+}
+
+int put_word_singleLine(FILE* new_file, char* list, int list_len)
+{
+    fprintf(new_file, "%s ", list);
+
+    return 1;
 }

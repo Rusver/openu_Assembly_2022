@@ -13,6 +13,7 @@
 struct DataItem {
     char* data;
     int key;
+    int type;
 };
 
 struct DataItem* hashArray[SIZE];
@@ -23,7 +24,7 @@ struct DataItem* item;
 int hashCode(int key);
 struct DataItem* search_by_key(int key);
 struct DataItem* search_by_string(char* data);
-void insert(char* data ,int key);
+void insert(char* data ,int key, int type);
 struct DataItem* delete(struct DataItem* item);
 void display();
 

@@ -141,10 +141,15 @@ int label_handler(FILE* fptr)
     char** list = NULL;
     int list_len = 0;
     int lineIndex = 0;
+    char** ext = NULL;
+    char** temp;
+    int idx = 0;
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
-            list = malloc((sizeof(char*)));
+        list = malloc(sizeof(char*));
+        ext = malloc(sizeof(char*));
+        *ext = NULL;
         printf("%s", buffer);
         get_input(buffer, &list, &list_len);
         if (list) {
@@ -152,15 +157,45 @@ int label_handler(FILE* fptr)
             if (is_label(list[0]))
             {
                 list[0][strcspn(list[0], ":")] = '\0';
-                insert(list[0], DECIMAL_ADDRESS + lineIndex);
+                if(is_in_ext_list(list[0], ext))
+                    insert(list[0], DECIMAL_ADDRESS + lineIndex, 1);
+                else
+                    insert(list[0], DECIMAL_ADDRESS + lineIndex, 0);
             }
+            if(strcmp(list[0], ".extern")) {
+                ext[idx] = malloc(strlen(list[1]));
+                strcpy(ext[idx], list[1]);
+                idx++;
+                temp = realloc(ext, sizeof(char*) * ((idx+1) + 1));
+                if (temp != NULL)
+                    ext = temp;
+                else printf("Error! can't create ext");
+
+            }
+
+
         }
+        ext[idx] = NULL;
         lineIndex++;
         free_list(list);
         free(list);
+
+        free_list(ext);
+        free(ext);
     }
 
     return 1;
+}
+
+int is_in_ext_list(char* word, char** list)
+{
+    int i=0;
+    while(list[i]) {
+        if (strcmp(word, list[i]))
+            return 1;
+        i++;
+    }
+    return 0;
 }
 
 int check_definitions()

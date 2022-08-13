@@ -48,7 +48,7 @@ struct DataItem* search_by_string(char* string) {
     return NULL;
 }
 
-void insert(char* data, int key) {
+void insert(char* data, int key, int type) {
 
     int hashIndex = 0;
 
@@ -58,6 +58,7 @@ void insert(char* data, int key) {
     strcpy(ds, data);
     item->data = ds;
     item->key = key;
+    item->type = type;
 
     /*move in array until an empty or deleted cell*/
     while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->key != -1) {
