@@ -52,7 +52,7 @@ void assembler(FILE* fptr)
             }
         }
 
-        assembly_print(last_file ,ADDRESS_START+ic, binary_code);
+        assembly_print(last_file ,ADDRESS_START+ic, binaryToDecimal(binary_code));
         ic++;
 
         free_list(list);
@@ -216,25 +216,30 @@ void entry_handler(char* buffer)
 int opcode_handler(char* buffer)
 {
     char* token;
-    char* line_by_comma;
-    int i =0;
+    char* line_by_space;
+    int digit_i = 0;
     int opcode = -1;
     int opcode_flag = 0;
-
-    char* binary_op_code_string;
+    char* split_by_comma;
     int from_address = 0;
     int ad_type = -1;
     int binary_code = -1;
     char temp[BUFF_LEN];
     int are_type;
     struct DataItem* item;
-    char* str;
+    char* str = NULL;
+    char bstr[OPCODE_LEN] = {0};
+    int code = 0;
+    int loop_idx =0;
+    int digit_len = 0;
+    char* token2 =0;
+    int free_comma_flag =0;
 
-    line_by_comma = malloc(strlen(buffer));
-    strcpy(line_by_comma, buffer);
+    line_by_space = malloc(strlen(buffer));
+    strcpy(line_by_space, buffer);
 
 
-    token = strtok(line_by_comma, " ");
+    token = strtok(line_by_space, " ");
     /* opcode_handler*/
 
     while (token != NULL) {
@@ -245,29 +250,74 @@ int opcode_handler(char* buffer)
             {
                 opcode = opcode - 1;
                 opcode_flag = 1;
-                binary_code = opcode;
+                string_code_helper(bstr, opcode, 4);
+                loop_idx = 0;
             }
         }
         else
         {
-            ad_type = address_type(token);
-            str = strtok(token, ".");
+            str = malloc(sizeof(token));
+            strcpy(str, token);
+            str[strcspn(str, ".")] = 0;
+            if (str[0] == ',')
+            {
+                free_comma_flag = 1;
+                split_by_comma = malloc(strlen(str));
+                strcpy(split_by_comma, str);
+                free(str);
+                str = strtok(split_by_comma, ",");
+            }
+            if (str[0] == '\t')
+                memmove(str, str + 1, strlen(str));
+            if (str[0] == ' ')
+                memmove(str, str + 1, strlen(str));
+            ad_type = address_type(str);
             if (ad_type == 1 || ad_type == 2)
             {
                 item = search_by_string(str);
                 if (item)
                     are_type = item->type;
             }
-            binary_code = concatenate(binary_code,ad_type);
+            if(ad_type != -1)
+            {
+                if(loop_idx == 1)
+                {
+                    string_code_helper(bstr, ad_type, 2);
+                }
+                if(loop_idx == 2)
+                {
+                    string_code_helper(bstr, ad_type, 2);
+                }
+            }
         }
 
         token = strtok(NULL, " ");
-        i++;
+        loop_idx++;
     }
-    binary_code = concatenate(binary_code, are_type);
+    string_code_helper(bstr, are_type, 2);
     /*check which type of register it is*/
-    free(line_by_comma);
-    return binary_code;
+    free(line_by_space);
+    if(free_comma_flag)
+        free(split_by_comma);
+
+    return atoi(bstr);
+}
+
+void string_code_helper(char* str, int type, int bits)
+{
+    int code = 0;
+    int digit_len = 0;
+    int i =0;
+
+    code = decimalToBin(type);
+    digit_len = floor(log10(abs(code))) + 1;
+    if (code == 0)
+        digit_len = 0;
+    for(i = 0; i < bits - digit_len; i++)
+        strcat(str, "0");
+    if (code != 0)
+        strcat(str, int_to_string(code));
+
 }
 
 int address_type(char* word)
@@ -352,3 +402,6 @@ int put_word_singleLine(FILE* new_file, char* list, int list_len)
 
     return 1;
 }
+
+
+

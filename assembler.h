@@ -4,7 +4,9 @@
 #include <ctype.h>
 #include "base_helper.h"
 #include <stdio.h>
+
 #define ADDRESS_START 100
+#define OPCODE_LEN 10
 
 /**
  * This function will handle the all assembler encoding
@@ -29,5 +31,8 @@ void assembly_print(FILE* fptr, int ic, int dc);
 void test_base32();
 int address_type(char* word);
 int concatenate(int x, int y);
+char* int_to_string(int x);
+void string_code_helper(char str[], int type, int bits);
 #endif /*OPENU_ASSEMBLY_2022_ASSEMBLER_H*/
+
 

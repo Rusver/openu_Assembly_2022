@@ -142,7 +142,6 @@ int label_handler(FILE* fptr)
     int list_len = 0;
     int lineIndex = 0;
     char** ext = NULL;
-    char** temp;
     int idx = 0;
 
 
