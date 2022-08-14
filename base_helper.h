@@ -73,7 +73,13 @@ void printBin(int a);
  */
 char* int_to_string(int x);
 
-
-char* stupid_function(int x);
+/**
+ * this function handles the integers that are smaller then 32
+ * example 15 - @^
+ * example 01 - !@
+ * @param x
+ * @return
+ */
+char* base32_for_rookies(int x);
 
 

@@ -383,7 +383,7 @@ void assembly_print(FILE* fptr, int ic, int dc)
 
     ic_base32 = decimal_to_mixedBase32(ic_base32_res,ic);
     if (dc <= 32)
-        dc_base32 = stupid_function(dc);
+        dc_base32 = base32_for_rookies(dc);
     else
         dc_base32 = decimal_to_mixedBase32(dc_base32_res,dc);
 
