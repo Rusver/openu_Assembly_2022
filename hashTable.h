@@ -13,7 +13,7 @@
 struct DataItem {
     char* data;
     int key;
-    int type;
+    int type; /*if 1 is extern if 0 not*/
 };
 
 struct DataItem* hashArray[SIZE];

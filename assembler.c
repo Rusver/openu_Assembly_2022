@@ -246,6 +246,7 @@ int opcode_handler(char* buffer)
     while (token != NULL) {
         if (opcode_flag == 0)
         {
+            /* check if it is an opcode*/
             opcode = op_code_parser(token);
             if (opcode)
             {
@@ -259,7 +260,7 @@ int opcode_handler(char* buffer)
         {
             str = malloc(sizeof(token));
             strcpy(str, token);
-            str[strcspn(str, ".")] = 0;
+            str[strcspn(str, ".")] = 0; /*deep copy do not break th split_by_space */
             if (str[0] == ',')
             {
                 free_comma_flag = 1;
@@ -277,7 +278,7 @@ int opcode_handler(char* buffer)
             {
                 item = search_by_string(str);
                 if (item)
-                    are_type = item->type;
+                    are_type = item->type; /*if 1 is extern if 0 not*/
             }
             if(ad_type != -1)
             {
