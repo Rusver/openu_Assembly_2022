@@ -137,7 +137,7 @@ char* decimal_to_mixedBase32(char res[], int decimal)
 }
 
 
-char* stupid_function(int x)
+char* base32_for_rookies(int x)
 {
     int r_x;
     int l_x;
