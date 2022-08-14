@@ -56,20 +56,45 @@ int is_end_of_macro(char** list, int list_len);
 void get_input(char* line, char*** list, int* idx);
 
 /**
- * this function will read the file and expand the macros - in a new file.
- * @param fptr, list_of_macros_names, macro_commands
- * @return
+ * int function will read the file and expand the macros - in a new file.
+ * @param list_of_macros_names
+ * @param macro_commands
+ * @param name_list_len
+ * @param macro_list_len
+ * @return returns 1 for success write of the file
  */
-
-
 int write_expanded_file(FILE *fptr, char** list_of_macros_names, char**** macro_commands, int* name_list_len, int* macro_list_len);
 
+/**
+ * int function the checks if there is a macro
+ * @param list_of_macros_names
+ * @param list
+ * @param name_list_len
+ * @param list_len
+ * @return returns 1 if macro found
+ */
 int has_macro(char** list_of_macros_names, char** list, int* name_list_len, int* list_len);
 
+/**
+ * void function that does a deep copy of the command list
+ * @param macro_commands
+ * @param name_list_len
+ * @param macro_list_len
+ * @param list_len
+ */
 void deep_copy_command_list(char**** macro_commands, int name_list_len, int macro_list_len, char** list, int list_len);
 
+/**
+ * int function the checks if there is a macro
+ * @param list
+ * @return returns 1 if label and 0 if not
+ */
 int is_label(char* list);
 
+/**
+ * void function that frees the list (null)
+ * @param list
+ */
 void free_list(char** list);
 
 /**
@@ -79,9 +104,26 @@ void free_list(char** list);
  */
 int label_handler(FILE* fptr);
 
+/**
+ * void function that frees the deep list (null)
+ * @param list
+ * @param macro_list_len
+ * @param name_list_len
+ */
 void free_arr_of_commands(char**** list, int macro_list_len, int name_list_len);
 
-
+/**
+ * int function the checks if there is string in a list of strings
+ * @param word
+ * @param list
+ * @return returns 1 if label and 0 if not
+ */
 int is_in_ext_list(char* word, char** list);
 
+/**
+ * void function that realocates values to another list
+ * @param list
+ * @param word
+ * @param idx
+ */
 void realloc_helper(char*** list, char* word, int idx);

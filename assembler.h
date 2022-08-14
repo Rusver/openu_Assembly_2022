@@ -26,12 +26,35 @@ int struct_handler(char* buffer);
 void extern_handler(char* buffer);
 void entry_handler(char* buffer);
 int opcode_handler(char* buffer);
+
+/**
+ * int function that writes inside of a file a column
+ * @param fptr - file
+ * @param ic - ic
+ * @param dc - dc
+ * @return struct value
+ */
 int put_word_singleLine(FILE* new_file, char* list, int list_len);
+
+/**
+ * void function that writes inside of a file 2 column ic and cd side by side
+ * @param fptr - file
+ * @param ic - ic
+ * @param dc - dc
+ */
 void assembly_print(FILE* fptr, int ic, int dc);
 void test_base32();
 int address_type(char* word);
 int concatenate(int x, int y);
+
+/**
+ * char* function that converts int to string with allocation
+ * @param x - number to convert
+ * @return 1 for success
+ */
 char* int_to_string(int x);
+
+
 void string_code_helper(char str[], int type, int bits);
 #endif /*OPENU_ASSEMBLY_2022_ASSEMBLER_H*/
 
