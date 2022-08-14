@@ -3,6 +3,8 @@
 char symbols[32]={'!','@','#','$','%','^','&','*','<','>',
                   'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v'};
 
+char symshort[10] = {'!','@','#','$','%','^','&','*','<','>'};
+
 char *opCodes[16] = {"mov","cmp","add","sub","not","clr","lea","inc","dec","jmp","bne","get","prn","jsr","rts","hlt"};
 
 
@@ -135,3 +137,32 @@ char* decimal_to_mixedBase32(char res[], int decimal)
 }
 
 
+char* stupid_function(int x)
+{
+    int r_x;
+    int l_x;
+    char* ch = malloc(2);
+
+    if (x < 10)
+    {
+        ch[0] = '0';
+        ch[1] = int_to_string(x)[0];
+    }
+    else
+    {
+        r_x = x % 10;
+        l_x = x / 10;
+        ch[0] = symbols[l_x];
+        ch[1] = symbols[r_x];
+    }
+    return ch;
+}
+
+
+char* int_to_string(int x) {
+    int length = snprintf(NULL, 0, "%d", x);
+    char *str = malloc(length + 1);
+    snprintf(str, length + 1, "%d", x);
+
+    return str;
+}

@@ -66,3 +66,14 @@ char* parseToBaseSymbols32(char* rawBase32);
 void printBin(int a);
 
 
+/**
+ * char* function that converts int to string with allocation
+ * @param x - number to convert
+ * @return 1 for success
+ */
+char* int_to_string(int x);
+
+
+char* stupid_function(int x);
+
+

@@ -47,12 +47,6 @@ void test_base32();
 int address_type(char* word);
 int concatenate(int x, int y);
 
-/**
- * char* function that converts int to string with allocation
- * @param x - number to convert
- * @return 1 for success
- */
-char* int_to_string(int x);
 
 
 void string_code_helper(char str[], int type, int bits);

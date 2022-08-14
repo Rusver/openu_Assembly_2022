@@ -59,6 +59,7 @@ void assembler(FILE* fptr)
         free(list);
     }
     printf("data counter: %d ", dc);
+
     printf("%s", decimal_to_mixedBase32(res,dc));
     fclose(last_file);
 }
@@ -363,14 +364,6 @@ int address_type(char* word)
     return address_type;
 }
 
-char* int_to_string(int x)
-{
-    int length = snprintf( NULL, 0, "%d", x);
-    char* str = malloc( length + 1 );
-    snprintf( str, length + 1, "%d", x );
-
-    return str;
-}
 
 int concatenate(int x, int y) {
     int pow = 10;
@@ -389,7 +382,10 @@ void assembly_print(FILE* fptr, int ic, int dc)
     char *dc_base32;
 
     ic_base32 = decimal_to_mixedBase32(ic_base32_res,ic);
-    dc_base32 = decimal_to_mixedBase32(dc_base32_res,dc);
+    if (dc <= 32)
+        dc_base32 = stupid_function(dc);
+    else
+        dc_base32 = decimal_to_mixedBase32(dc_base32_res,dc);
 
     put_word_singleLine(fptr,ic_base32, strlen(ic_base32));
     put_word_singleLine(fptr,"\t", 1);
@@ -402,6 +398,7 @@ int put_word_singleLine(FILE* new_file, char* list, int list_len)
 
     return 1;
 }
+
 
 
 
