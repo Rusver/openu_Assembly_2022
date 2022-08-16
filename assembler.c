@@ -7,6 +7,7 @@ void assembler(FILE* fptr)
     int dc = 0;
 
     FILE* last_file;
+    FILE* extern_file;
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
@@ -17,6 +18,12 @@ void assembler(FILE* fptr)
     if (!last_file)
     {
         fprintf(stderr, "Couldn't open file %s\n", "ps.ob");
+    }
+
+    extern_file = fopen("ps.ext", "w");
+    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
+    {
+        fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
     }
 
     while (fgets(buffer, BUFF_LEN, fptr))
@@ -39,7 +46,7 @@ void assembler(FILE* fptr)
             }
             if(!strcmp(list[0], ".extern"))
             {
-                extern_handler(buffer);
+                extern_handler(extern_file, buffer);
             }
             else if(!strcmp(list[0], ".entry"))
             {
@@ -57,11 +64,13 @@ void assembler(FILE* fptr)
 
         free_list(list);
         free(list);
+        memset(buffer,0, BUFF_LEN);
     }
     printf("data counter: %d ", dc);
 
     printf("%s", decimal_to_mixedBase32(res,dc));
     fclose(last_file);
+    fclose(fptr);
 }
 
 int data_handler(char* buffer)
@@ -183,19 +192,16 @@ int struct_handler(char* buffer)
     return dc;
 }
 
-void extern_handler(char* buffer)
+void extern_handler(FILE* fptr, char* buffer)
 {
-    FILE* fptr;
-    fptr = fopen("ps.ext", "w");
-    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
-    {
-        fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
-    }
-
     put_word(fptr, &buffer[1], strlen(&buffer[1]));
-
-    fclose(fptr);
-
+    /*HASH item = search_by_string(LENGTH ); should be buffer[1]
+     * if item
+     *      bin = item->key;
+     *
+     * put word ( " " )
+     * put word (bin32(bin \ item-> key));
+     * */
 }
 
 
@@ -226,7 +232,7 @@ int opcode_handler(char* buffer)
     int ad_type = -1;
     int binary_code = -1;
     char temp[BUFF_LEN];
-    int are_type;
+    int are_type = 0;
     struct DataItem* item;
     char* str = NULL;
     char bstr[OPCODE_LEN] = {0};
@@ -260,7 +266,7 @@ int opcode_handler(char* buffer)
         {
             str = malloc(sizeof(token));
             strcpy(str, token);
-            str[strcspn(str, ".")] = 0; /*deep copy do not break th split_by_space */
+             /*deep copy do not break th split_by_space */
             if (str[0] == ',')
             {
                 free_comma_flag = 1;
@@ -276,7 +282,8 @@ int opcode_handler(char* buffer)
             ad_type = address_type(str);
             if (ad_type == 1 || ad_type == 2)
             {
-                item = search_by_string(str);
+                str[strcspn(str, ".")] = 0; /*TODO: check if righr place*/
+                item = search_by_string(str); /*check the TAGS*/
                 if (item)
                     are_type = item->type; /*if 1 is extern if 0 not*/
             }
@@ -328,11 +335,11 @@ int address_type(char* word)
     int cspn;
     int word_len;
 
-    if(word[0] == 'r')
+    if(word[0] == 'r') /* if register*/
     {
         address_type = 3;
     }
-    else if(word[0] == '#')
+    else if(word[0] == '#') /* if number */
     {
         if (word[1] == '-' || word[1] == '+')
         {
