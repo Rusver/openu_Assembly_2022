@@ -8,6 +8,7 @@ void assembler(FILE* fptr)
 
     FILE* last_file;
     FILE* extern_file;
+    FILE* intern_file;
     char buffer[BUFF_LEN];
     char** list = NULL;
     int list_len = 0;
@@ -21,6 +22,12 @@ void assembler(FILE* fptr)
     }
 
     extern_file = fopen("ps.ext", "w");
+    if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
+    {
+        fprintf(stderr, "Couldn't open file %s\n", "ps.ext");
+    }
+
+    intern_file = fopen("ps.ent", "w");
     if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
     {
         fprintf(stderr, "Couldn't open file %s\n", "ps.ent");
@@ -46,12 +53,12 @@ void assembler(FILE* fptr)
             }
             if(!strcmp(list[0], ".extern"))
             {
-                extern_handler(extern_file, buffer);
+                file_handler(extern_file, buffer);
             }
             else if(!strcmp(list[0], ".entry"))
             {
                 printf("ATTENTION! Entry Detected!");
-                entry_handler(buffer);
+                file_handler(intern_file, buffer);
             }
             else
             {
@@ -192,16 +199,41 @@ int struct_handler(char* buffer)
     return dc;
 }
 
-void extern_handler(FILE* fptr, char* buffer)
+char* getOPC (char* buffer)
 {
-    put_word(fptr, &buffer[1], strlen(&buffer[1]));
-    /*HASH item = search_by_string(LENGTH ); should be buffer[1]
-     * if item
-     *      bin = item->key;
-     *
-     * put word ( " " )
-     * put word (bin32(bin \ item-> key));
-     * */
+    char* copy = malloc(strlen(buffer+1));
+    strcpy(copy,buffer);
+
+    int i = 0;
+    char *p = strtok (copy, " ");
+    char *array[3];
+
+    while (p != NULL)
+    {
+        array[i++] = p;
+        p = strtok (NULL, " ");
+    }
+
+    return array[1];
+}
+
+void file_handler(FILE* fptr, char* buffer)
+{
+    char res[100];
+    char* base32;
+    char* opc = getOPC(buffer);
+
+    struct DataItem* item = search_by_string(opc);
+    if (item)
+    {
+        base32 = decimal_to_mixedBase32(res,item->key);
+
+        put_word_singleLine(fptr, opc, strlen(opc));
+        put_word_singleLine(fptr,"\t", 1);
+        put_word(fptr,base32, strlen(base32));
+
+        fprintf(fptr, "%c", '\n');
+    }
 }
 
 

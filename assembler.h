@@ -23,9 +23,16 @@ void assembler(FILE* fptr);
 int data_handler(char* buffer);
 int string_handler(char* string);
 int struct_handler(char* buffer);
-void extern_handler(FILE* extern_handler, char* buffer);
+/**
+ * void function that writes inside a file
+ * @param file_handler - file
+ * @param buffer - string to write
+ */
+void file_handler(FILE* file_handler, char* buffer);
 void entry_handler(char* buffer);
 int opcode_handler(char* buffer);
+char* getOPC (char* buffer);
+
 
 /**
  * int function that writes inside of a file a column
