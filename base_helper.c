@@ -142,11 +142,14 @@ char* base32_for_rookies(int x)
     int r_x;
     int l_x;
     char* ch = malloc(2);
+    char* str;
 
     if (x < 10)
     {
         ch[0] = '0';
-        ch[1] = int_to_string(x)[0];
+        str = int_to_string(x);
+        ch[1] = str[0];
+        free(str);
     }
     else
     {

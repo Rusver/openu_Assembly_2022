@@ -331,6 +331,7 @@ int opcode_handler(char* buffer)
                     string_code_helper(bstr, ad_type, 2);
                 }
             }
+                free(str);
         }
 
         token = strtok(NULL, " ");
@@ -342,23 +343,28 @@ int opcode_handler(char* buffer)
     if(free_comma_flag)
         free(split_by_comma);
 
+
     return atoi(bstr);
 }
 
-void string_code_helper(char* str, int type, int bits)
-{
-    int code = 0;
-    int digit_len = 0;
-    int i =0;
+void string_code_helper(char* str, int type, int bits) {
+        int code = 0;
+        int digit_len = 0;
+        int i = 0;
+        char *temp;
 
-    code = decimalToBin(type);
-    digit_len = floor(log10(abs(code))) + 1;
-    if (code == 0)
-        digit_len = 0;
-    for(i = 0; i < bits - digit_len; i++)
-        strcat(str, "0");
-    if (code != 0)
-        strcat(str, int_to_string(code));
+        code = decimalToBin(type);
+        digit_len = floor(log10(abs(code))) + 1;
+        if (code == 0)
+                digit_len = 0;
+        for (i = 0; i < bits - digit_len; i++)
+                strcat(str, "0");
+        if (code != 0)
+        {
+        temp = int_to_string(code);
+        strcat(str, temp);
+        free(temp);
+        }
 
 }
 
@@ -574,7 +580,7 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
 
 
 
-
+                        free(temp);
                 } else if (ad_type == 3) {
 
                     num = atoi(&str[1]);
