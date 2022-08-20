@@ -31,7 +31,6 @@ int struct_handler(char* buffer);
 void file_handler(FILE* file_handler, char* buffer);
 void entry_handler(char* buffer);
 int opcode_handler(char* buffer);
-char* getOPC (char* buffer);
 
 
 /**
@@ -54,9 +53,11 @@ void test_base32();
 int address_type(char* word);
 int concatenate(int x, int y);
 
-
+char* getOPC (char* buffer);
 
 void string_code_helper(char str[], int type, int bits);
-#endif /*OPENU_ASSEMBLY_2022_ASSEMBLER_H*/
+int address_analyze(FILE* last_file, char* buffer, int* ic, int* dc);
 
+void string_printer(char* str, FILE* last_file, int* ic);
+#endif /*OPENU_ASSEMBLY_2022_ASSEMBLER_H*/
 

@@ -166,3 +166,19 @@ char* int_to_string(int x) {
 
     return str;
 }
+
+int two_complement(int decimal)
+{
+    int mask;
+    char bin[9];
+    int i =0;
+
+    for (i = 0; i < 8; i++) {
+        mask = 1u << (8 - 1 - i);
+        bin[i] = (decimal & mask) ? '1' : '0';
+    }
+    bin[8] = '\0';
+
+    return atoi(bin);
+}
+

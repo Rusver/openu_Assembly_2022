@@ -12,6 +12,7 @@
 
 struct DataItem {
     char* data;
+    char** list;
     int key;
     int type; /*if 1 is extern if 0 not*/
 };
@@ -44,7 +45,7 @@ struct DataItem* search_by_string(char* data);
  * @param key - key to search by
  * @param type - type
  */
-void insert(char* data ,int key, int type);
+void insert(char* data, char** list ,int key, int type);
 /**
  * struct function that deletes item from list
  * @param item - list to delete the item from

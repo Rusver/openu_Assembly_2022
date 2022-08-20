@@ -82,4 +82,9 @@ char* int_to_string(int x);
  */
 char* base32_for_rookies(int x);
 
-
+/**
+ * switching to the two's complement binary num
+ * @param num
+ * @return
+ */
+int two_complement(int decimal);

@@ -14,7 +14,7 @@ char** macro_handler(FILE* fptr, int* name_list_len, char***** macro_commands, i
 
 	/*int line_count = 0;*/
 	int initizilied_flag = 0;
-	
+
 	list_of_macros_names = (char**)malloc(sizeof(char*));
 
 	while (fgets(buffer, BUFF_LEN, fptr))
@@ -158,9 +158,9 @@ int label_handler(FILE* fptr)
             {
                 list[0][strcspn(list[0], ":")] = '\0';
                 if(is_in_ext_list(list[0], ext))
-                    insert(list[0], DECIMAL_ADDRESS + lineIndex, 1);
+                    insert(list[0], list, DECIMAL_ADDRESS + lineIndex, 1);
                 else
-                    insert(list[0], DECIMAL_ADDRESS + lineIndex, 0);
+                    insert(list[0], list, DECIMAL_ADDRESS + lineIndex, 0);
             }
             if(!strcmp(list[0], ".extern")) {
                     realloc_helper(&ext, list[1], idx);
@@ -171,10 +171,9 @@ int label_handler(FILE* fptr)
             free_list(list);
 
         }
+        lineIndex++;
     }
         ext[idx] = NULL;
-
-        lineIndex++;
 
         free_list(ext);
         free(ext);

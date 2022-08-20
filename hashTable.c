@@ -1,8 +1,8 @@
 /*
 // Created by Ruslan Ver on 05/08/2022.
 */
-#include "files.h"
 #include "hashTable.h"
+#include "pre_and_parcer.h"
 
 int hashCode(int key) {
     return key % SIZE;
@@ -48,15 +48,31 @@ struct DataItem* search_by_string(char* string) {
     return NULL;
 }
 
-void insert(char* data, int key, int type) {
+void insert(char* data, char** list, int key, int type) {
 
     int hashIndex = 0;
+    int i = 0;
 
-    struct DataItem *item = (struct DataItem*) malloc(sizeof(struct DataItem));
-    int len = strlen(data)+1;
-    char *ds = (char*) malloc(len*sizeof(char));
-    strcpy(ds, data);
-    item->data = ds;
+    struct DataItem *item = malloc(sizeof(struct DataItem));
+    char** ds = malloc(sizeof(char*));
+    char* name = malloc(strlen(data));
+    char** temp;
+
+    strcpy(name, data);
+
+    while(list[i] != NULL)
+    {
+        ds[i] = malloc(strlen(list[i]));
+        strcpy(ds[i], list[i]);
+        i++;
+        temp = realloc(ds, sizeof(char*)*((i+1)));
+        if (temp != NULL)
+            ds = temp;
+    }
+    ds[i] = NULL;
+
+    item->data = name;
+    item->list = ds;
     item->key = key;
     item->type = type;
 
@@ -78,6 +94,7 @@ struct DataItem* delete(struct DataItem* item) {
     /*get the hash*/
     int hashIndex = hashCode(key);
 
+
     /*move in array until an empty*/
     while(hashArray[hashIndex] != NULL) {
 
@@ -85,7 +102,10 @@ struct DataItem* delete(struct DataItem* item) {
             struct DataItem* temp = hashArray[hashIndex];
 
             /*assign a dummy item at deleted position*/
-            hashArray[hashIndex] = dummyItem;
+            free(temp->data);
+            free_list(temp->list);
+            free(temp->list);
+            hashArray[hashIndex] = NULL;
             return temp;
         }
 

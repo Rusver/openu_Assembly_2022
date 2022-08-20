@@ -13,7 +13,8 @@ void assembler(FILE* fptr)
     char** list = NULL;
     int list_len = 0;
     char res[BUFF_LEN];
-    int binary_code = 160;
+    int binary_code = -1;
+    int skip_flag = 0;
 
     last_file = fopen("ps.ob", "w");
     if (!last_file)
@@ -62,16 +63,22 @@ void assembler(FILE* fptr)
             }
             else
             {
+                skip_flag = 1;
                 binary_code =  opcode_handler(buffer);
             }
         }
-
         assembly_print(last_file ,ADDRESS_START+ic, binaryToDecimal(binary_code));
+        if (skip_flag)
+            binary_code = address_analyze(last_file, buffer, &ic, &dc);
+
+
         ic++;
 
         free_list(list);
         free(list);
         memset(buffer,0, BUFF_LEN);
+        binary_code = -1;
+        skip_flag = 0;
     }
     printf("data counter: %d ", dc);
 
@@ -201,12 +208,13 @@ int struct_handler(char* buffer)
 
 char* getOPC (char* buffer)
 {
+    int i = 0;
     char* copy = malloc(strlen(buffer+1));
+    char *p;
+    char *array[3];
     strcpy(copy,buffer);
 
-    int i = 0;
-    char *p = strtok (copy, " ");
-    char *array[3];
+     p = strtok (copy, " ");
 
     while (p != NULL)
     {
@@ -232,7 +240,7 @@ void file_handler(FILE* fptr, char* buffer)
         put_word_singleLine(fptr,"\t", 1);
         put_word(fptr,base32, strlen(base32));
 
-        fprintf(fptr, "%c", '\n');
+
     }
 }
 
@@ -256,22 +264,15 @@ int opcode_handler(char* buffer)
 {
     char* token;
     char* line_by_space;
-    int digit_i = 0;
     int opcode = -1;
     int opcode_flag = 0;
     char* split_by_comma;
-    int from_address = 0;
     int ad_type = -1;
-    int binary_code = -1;
-    char temp[BUFF_LEN];
     int are_type = 0;
     struct DataItem* item;
     char* str = NULL;
     char bstr[OPCODE_LEN] = {0};
-    int code = 0;
     int loop_idx =0;
-    int digit_len = 0;
-    char* token2 =0;
     int free_comma_flag =0;
 
     line_by_space = malloc(strlen(buffer));
@@ -314,7 +315,7 @@ int opcode_handler(char* buffer)
             ad_type = address_type(str);
             if (ad_type == 1 || ad_type == 2)
             {
-                str[strcspn(str, ".")] = 0; /*TODO: check if righr place*/
+                str[strcspn(str, ".")] = 0; /*TODO: check if right place*/
                 item = search_by_string(str); /*check the TAGS*/
                 if (item)
                     are_type = item->type; /*if 1 is extern if 0 not*/
@@ -439,6 +440,186 @@ int put_word_singleLine(FILE* new_file, char* list, int list_len)
     return 1;
 }
 
+int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
+{
+    char* line_by_space;
+    char* token;
+    int opcode_flag = 0;
+    int opcode = 0;
+    char** list = 0;
+    struct DataItem* item;
+    int address = 0;
+    char* str;
+    char* temp;
+    int free_comma_flag = 0;
+    char* split_by_comma;
+    int ad_type = -1;
+    int num = 0;
+    char register_code[10];
+    int loopIndex = 1;
+    char temp_str[4] = {0};
+    int are_type = 0;
+    int reg_flag = 0;
+    int stop_flag = 0;
+    int cspn_flag = 0;
+    int i = 0;
+    char** temp_pointer;
+    int label_counter = 0;
+    int cspn_idx = -1;
+    char* item_pointer;
+
+    list = malloc(sizeof(char*));
+    line_by_space = malloc(strlen(buffer));
+    strcpy(line_by_space, buffer);
+
+
+    token = strtok(line_by_space, " ");
+
+    while (token != NULL) {
+        list[i] = malloc(sizeof(strlen(token)));
+        strcpy(list[i], token);
+        token = strtok(NULL, " ");
+        i++;
+        temp_pointer = realloc(list, sizeof(char*)*(i+1));
+        if(temp_pointer != NULL)
+        {
+            list = temp_pointer;
+        }
+    }
+    list[i] = NULL;
+
+    if (opcode_flag == 0) {
+        /* check if it is an opcode*/
+        opcode = op_code_parser(list[0]);
+        if(!opcode)
+        {
+            label_counter++;
+            opcode = op_code_parser(list[1]);
+        }
+        if (opcode) {
+            opcode = opcode - 1;
+            opcode_flag = 1;
+
+            while(stop_flag == 0 && loopIndex != 2) {
+
+                str = list[1 + label_counter];
+
+                if (str[0] == ',') {
+                    free_comma_flag = 1;
+                    split_by_comma = malloc(strlen(str));
+                    strcpy(split_by_comma, str);
+                    free(str);
+                    str = strtok(split_by_comma, ",");
+                }
+                if (str[0] == '\t')
+                    memmove(str, str + 1, strlen(str));
+                if (str[0] == ' ')
+                    memmove(str, str + 1, strlen(str));
+                ad_type = address_type(str);
+                if (ad_type == 0) {
+
+                    if (str[1] == '+') {
+                        num = atoi(&str[2]);
+                    } else if (str[1] == '-') {
+                        num = -atoi(&str[2]);
+                        num = binaryToDecimal(two_complement(num));
+                    } else
+                        num = atoi(&str[1]);
+
+                    string_code_helper(register_code, num, 8);
+                }
+                else if (ad_type == 1 || ad_type == 2)
+                {
+                    cspn_idx = strcspn(str, ".");
+                    temp = malloc(strlen(str - cspn_idx));
+                    strcpy(temp, str + (cspn_idx+1)); /*get the number */
+                    if (cspn_idx)
+                    {
+                        cspn_flag = 1;
+                    }
+
+                    str[cspn_idx] = 0;
+                    item = search_by_string(str); /*check the TAGS*/
+                    if (item)
+                    {
+                        are_type = item->type;
+                        address = item->key;
+                        /*print address*/
+                        assembly_print(last_file, ADDRESS_START+(*ic), address);
+                        (*ic)++;
+                    }
+
+                    if(cspn_flag)
+                    {
+
+                        item_pointer = item->list[1 + atoi(&temp[0])];
+                        if(item_pointer[0] == '\"')
+                            string_printer(item_pointer, last_file, ic);
+                        else
+                        {
+                            if (item_pointer[0] == '+') {
+                                num = atoi(&item_pointer[1]);
+                            }
+                            else if (item_pointer[0] == '-') {
+                                num = -atoi(&item_pointer[1]);
+                                num = binaryToDecimal(two_complement(num));
+                            } else
+                                num = atoi(&item_pointer[0]);
+
+                            assembly_print(last_file, ADDRESS_START+(*ic), num);
+                            (*ic)++;
+                        }
+
+                    }
 
 
 
+
+                } else if (ad_type == 3) {
+
+                    num = atoi(&str[1]);
+                    num = decimalToBin(num);
+                    string_code_helper(temp_str, num, 4);
+
+                    if (loopIndex == 2 && reg_flag == 0) {
+                        string_code_helper(register_code, 0, 4);
+                        strcat(register_code, temp_str);
+                    } else {
+                        string_code_helper(register_code, num, 4);
+                        string_code_helper(register_code, 0, 4);
+                    }
+
+                    reg_flag = 1;
+                } else
+                    printf("Error with address_type in address_analyze function");
+
+                if (opcode > 6) /* if only one character */
+                {
+                    stop_flag = 1;
+                }
+
+                loopIndex++;
+            }
+        }
+    }
+    string_code_helper(register_code, are_type, 2);
+
+    free_list(list);
+    free(list);
+    free(line_by_space);
+    if (free_comma_flag)
+        free(split_by_comma);
+
+    return atoi(register_code);
+}
+
+void string_printer(char* str, FILE* last_file, int* ic)
+{
+    int i = 1;
+    while (str[i] != '\"' && str[i] != '\0')
+    {
+        assembly_print(last_file, ADDRESS_START + (*ic), (int) str[i]);
+        (*ic)++;
+        i++;
+    }
+}
