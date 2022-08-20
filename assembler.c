@@ -315,7 +315,7 @@ int opcode_handler(char* buffer)
             ad_type = address_type(str);
             if (ad_type == 1 || ad_type == 2)
             {
-                str[strcspn(str, ".")] = 0; /*TODO: check if right place*/
+                str[strcspn(str, ".")] = 0; /*check if right place*/
                 item = search_by_string(str); /*check the TAGS*/
                 if (item)
                     are_type = item->type; /*if 1 is extern if 0 not*/
