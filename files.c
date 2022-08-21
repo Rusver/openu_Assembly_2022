@@ -7,7 +7,7 @@ void open_files(int argc, char *argv[])
 	int i;
     FILE *fptr;
     char *file_name;
-    char buff[BUFF_LEN];  /*TODO: create error if no file*/
+    char buff[BUFF_LEN];
 
 	/*getcwd(buff, sizeof(buff));*/
 	printf("YOU ARE IN OPEN_FILES");
@@ -22,7 +22,7 @@ void open_files(int argc, char *argv[])
 		strcat(file_name, argv[i]);
 		strcat(file_name, ".txt");
 
-		fptr = fopen("file.as", "r"); /*TODO: make it dynamic*/
+		fptr = fopen("file.as", "r");
 		if (!fptr) /* If the wasn't found, or it isn't allowed for reading, the file pointer is NULL */
 		{
 			fprintf(stderr, "Couldn't open file %s\n", file_name);

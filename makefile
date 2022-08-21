@@ -1,6 +1,6 @@
 
 OBJ = files main preprocessor
-CC=gcc 
+CC=gcc
 CFLAGS =-Wall -pedantic -ansi
 
 all: program1

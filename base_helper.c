@@ -141,14 +141,21 @@ char* base32_for_rookies(int x)
 {
     int r_x;
     int l_x;
-    char* ch = malloc(2);
+    char* ch = malloc(3);
     char* str;
+    int idx = -1;
 
     if (x < 10)
     {
         ch[0] = '0';
         str = int_to_string(x);
         ch[1] = str[0];
+
+        idx = ch[0] - '0';
+        ch[0] = symbols[idx];
+        idx = ch[1] - '0';
+        ch[1] = symbols[idx];
+        ch[2] = '\0';
         free(str);
     }
     else
@@ -157,15 +164,25 @@ char* base32_for_rookies(int x)
         l_x = x / 10;
         ch[0] = symbols[l_x];
         ch[1] = symbols[r_x];
+        ch[2] = '\0';
     }
     return ch;
 }
 
 
-char* int_to_string(int x) {
-    int length = snprintf(NULL, 0, "%d", x);
-    char *str = malloc(length + 1);
-    snprintf(str, length + 1, "%d", x);
+char* int_to_string(int x)
+{
+    int length = 0;
+    char *str = malloc(1);
+    if (x != 0)
+    {
+        length = floor(log10(abs(x))) + 1;
+        free(str);
+        str = malloc(length + 1);
+        itoa(x, str);
+    }
+    else
+        str[0] = '0';
 
     return str;
 }
@@ -184,4 +201,32 @@ int two_complement(int decimal)
 
     return atoi(bin);
 }
+
+void itoa(int n, char s[])
+{
+    int i, sign;
+    if ((sign = n) < 0)  /* record sign*/
+        n = -n;         /* make n positive*/
+    i = 0;
+    do {                /* generate digits in reverse order*/
+        s[i++] = n % 10 + '0'; /* get next digit*/
+    } while ((n /= 10) > 0);  /* delete it*/
+    if (sign < 0)
+        s[i++] = '-';
+    s[i] = '\0';
+    reverse(s);
+}
+
+void reverse(char s[])
+{
+    int c, i, j;
+
+    for (i=0, j = strlen(s)-1; i < j; i++, j--)
+    {
+        c = s[i];
+        s[i] = s[j];
+        s[j] = c;
+    }
+}
+
 

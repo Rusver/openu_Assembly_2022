@@ -1,0 +1,2 @@
+.entry LOOP
+.entry LENGTH

@@ -88,3 +88,16 @@ char* base32_for_rookies(int x);
  * @return
  */
 int two_complement(int decimal);
+
+/**
+ * convert n to characters in s
+ * @param n
+ * @param s
+ */
+void itoa(int n, char s[]);
+
+/**
+ * reverse: reverse strings in place
+ * @param s
+ */
+void reverse(char s[]);

@@ -67,7 +67,8 @@ void assembler(FILE* fptr)
                 binary_code =  opcode_handler(buffer);
             }
         }
-        assembly_print(last_file ,ADDRESS_START+ic, binaryToDecimal(binary_code));
+        binary_code = binaryToDecimal(binary_code);
+        assembly_print(last_file ,ADDRESS_START+ic, binary_code);
         if (skip_flag)
             binary_code = address_analyze(last_file, buffer, &ic, &dc);
 
@@ -274,6 +275,7 @@ int opcode_handler(char* buffer)
     char bstr[OPCODE_LEN] = {0};
     int loop_idx =0;
     int free_comma_flag =0;
+    int free_flag = 0;
 
     line_by_space = malloc(strlen(buffer));
     strcpy(line_by_space, buffer);
@@ -306,6 +308,7 @@ int opcode_handler(char* buffer)
                 split_by_comma = malloc(strlen(str));
                 strcpy(split_by_comma, str);
                 free(str);
+                free_flag = 1;
                 str = strtok(split_by_comma, ",");
             }
             if (str[0] == '\t')
@@ -331,7 +334,10 @@ int opcode_handler(char* buffer)
                     string_code_helper(bstr, ad_type, 2);
                 }
             }
+            if (free_flag == 0) {
                 free(str);
+                str = NULL;
+            }
         }
 
         token = strtok(NULL, " ");
@@ -425,8 +431,8 @@ void assembly_print(FILE* fptr, int ic, int dc)
     char ic_base32_res[BUFF_LEN];
     char dc_base32_res[BUFF_LEN];
 
-    char *ic_base32;
-    char *dc_base32;
+    char *ic_base32 = NULL;
+    char *dc_base32 = NULL;
 
     ic_base32 = decimal_to_mixedBase32(ic_base32_res,ic);
     if (dc <= 32)
@@ -461,7 +467,7 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
     char* split_by_comma;
     int ad_type = -1;
     int num = 0;
-    char register_code[10];
+    char register_code[10] = {0};
     int loopIndex = 1;
     char temp_str[4] = {0};
     int are_type = 0;
@@ -624,7 +630,7 @@ void string_printer(char* str, FILE* last_file, int* ic)
     int i = 1;
     while (str[i] != '\"' && str[i] != '\0')
     {
-        assembly_print(last_file, ADDRESS_START + (*ic), (int) str[i]);
+        assembly_print(last_file, ADDRESS_START + (*ic), (int)str[i]);
         (*ic)++;
         i++;
     }
