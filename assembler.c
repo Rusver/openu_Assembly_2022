@@ -628,7 +628,6 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
     }
     string_code_helper(register_code, are_type, 2);
 
-    free(temp_pointer);
     free_list(list);
     free(list);
     free(line_by_space);
