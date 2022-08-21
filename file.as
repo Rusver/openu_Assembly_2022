@@ -3,7 +3,7 @@ MAIN:   mov S1.1 ,LENGTH
 LOOP:   jmp END
         macro m1
             inc K
-            mov S1.2 ,r3
+            mov S1.2 , r3
         endmacro
         prn #-5
         sub r1, r4

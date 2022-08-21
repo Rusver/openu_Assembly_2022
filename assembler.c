@@ -293,6 +293,7 @@ long opcode_handler(char* buffer)
             if (opcode)
             {
                 opcode = opcode - 1;
+                opcode = binaryToDecimal(opcode);
                 opcode_flag = 1;
                 string_code_helper(bstr, opcode, 4);
                 loop_idx = 0;
@@ -492,22 +493,22 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
     char* item_pointer;
 
     list = malloc(sizeof(char*));
-        line_by_space = calloc(strlen(buffer), sizeof (char));
+        line_by_space = calloc(strlen(buffer), sizeof(char));
     strcpy(line_by_space, buffer);
 
 
     token = strtok(line_by_space, " ");
 
     while (token != NULL) {
-        list[i] = malloc(sizeof(strlen(token)));
+        list[i] = calloc(sizeof(strlen(token)), sizeof(char));
         strcpy(list[i], token);
-        token = strtok(NULL, " ");
         i++;
         temp_pointer = realloc(list, sizeof(char*)*(i+1));
         if(temp_pointer != NULL)
         {
             list = temp_pointer;
         }
+        token = strtok(NULL, " ");
     }
     list[i] = NULL;
 
@@ -627,6 +628,7 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
     }
     string_code_helper(register_code, are_type, 2);
 
+    free(temp_pointer);
     free_list(list);
     free(list);
     free(line_by_space);
