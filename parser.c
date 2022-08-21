@@ -99,7 +99,7 @@ void get_input(char* line, char*** list, int *idx)
 
 	*idx = 0;
 
-    local_line = malloc(strlen(line)+1);
+    local_line = calloc(strlen(line)+1, sizeof(char));
     strcpy(local_line, line);
 
 	token = strtok(local_line, " "); /*extract the first token*/
@@ -117,7 +117,7 @@ void get_input(char* line, char*** list, int *idx)
 		(*idx)++;
 
         /* Increase array size to hold 1 more entry. */
-        temp = realloc(list_local, sizeof(char*) * (*idx + 1));
+        temp = realloc(list_local, sizeof(char*) * ((*idx) + 1));
         if (temp != NULL)
         {
                 list_local = temp;

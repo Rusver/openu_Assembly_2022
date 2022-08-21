@@ -146,7 +146,7 @@ int label_handler(FILE* fptr)
 
 
     list = malloc(sizeof(char*));
-    ext = malloc(sizeof(char*));
+    ext = calloc(1, sizeof(char*));
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {

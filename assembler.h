@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 #define ADDRESS_START 100
-#define OPCODE_LEN 10
+#define OPCODE_LEN 11
 
 /**
  * This function will handle the all assembler encoding
@@ -30,7 +30,7 @@ int struct_handler(char* buffer);
  */
 void file_handler(FILE* file_handler, char* buffer);
 void entry_handler(char* buffer);
-int opcode_handler(char* buffer);
+long opcode_handler(char* buffer);
 
 
 /**

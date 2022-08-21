@@ -36,7 +36,7 @@ void assembler(FILE* fptr)
 
     while (fgets(buffer, BUFF_LEN, fptr))
     {
-        list = (char **) malloc((sizeof(char *)));
+        list = calloc(1, (sizeof(char *)));
         printf("%s", buffer);
         get_input(buffer, &list, &list_len);
         if (list) {
@@ -261,7 +261,7 @@ void entry_handler(char* buffer)
 
 }
 
-int opcode_handler(char* buffer)
+long opcode_handler(char* buffer)
 {
     char* token;
     char* line_by_space;
@@ -276,6 +276,7 @@ int opcode_handler(char* buffer)
     int loop_idx =0;
     int free_comma_flag =0;
     int free_flag = 0;
+    long address = 0;
 
     line_by_space = malloc(strlen(buffer));
     strcpy(line_by_space, buffer);
@@ -318,7 +319,7 @@ int opcode_handler(char* buffer)
             ad_type = address_type(str);
             if (ad_type == 1 || ad_type == 2)
             {
-                str[strcspn(str, ".")] = 0; /*check if right place*/
+                str[strcspn(str, ".")] = '\0'; /*check if right place*/
                 item = search_by_string(str); /*check the TAGS*/
                 if (item)
                     are_type = item->type; /*if 1 is extern if 0 not*/
@@ -349,8 +350,11 @@ int opcode_handler(char* buffer)
     if(free_comma_flag)
         free(split_by_comma);
 
-
-    return atoi(bstr);
+    bstr[10] = '\0';
+    address = atoi(bstr);
+    if (address < 0)
+            address = 0;
+    return address;
 }
 
 void string_code_helper(char* str, int type, int bits) {
@@ -427,7 +431,7 @@ int concatenate(int x, int y) {
 
 void assembly_print(FILE* fptr, int ic, int dc)
 {
-
+        int free_flag = 0;
     char ic_base32_res[BUFF_LEN];
     char dc_base32_res[BUFF_LEN];
 
@@ -436,13 +440,20 @@ void assembly_print(FILE* fptr, int ic, int dc)
 
     ic_base32 = decimal_to_mixedBase32(ic_base32_res,ic);
     if (dc <= 32)
-        dc_base32 = base32_for_rookies(dc);
+    {
+            dc_base32 = base32_for_rookies(dc);
+            free_flag = 1;
+    }
+
+
     else
         dc_base32 = decimal_to_mixedBase32(dc_base32_res,dc);
 
     put_word_singleLine(fptr,ic_base32, strlen(ic_base32));
     put_word_singleLine(fptr,"\t", 1);
     put_word(fptr,dc_base32, strlen(dc_base32));
+    if (free_flag)
+            free(dc_base32);
 }
 
 int put_word_singleLine(FILE* new_file, char* list, int list_len)
@@ -481,7 +492,7 @@ int address_analyze(FILE* last_file ,char* buffer, int* ic, int* dc)
     char* item_pointer;
 
     list = malloc(sizeof(char*));
-    line_by_space = malloc(strlen(buffer));
+        line_by_space = calloc(strlen(buffer), sizeof (char));
     strcpy(line_by_space, buffer);
 
 
