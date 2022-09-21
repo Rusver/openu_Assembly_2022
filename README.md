@@ -1,2 +1,2 @@
 # openu_Assembly_2022
-project for University in c class
+Project for University in C Advanced class
